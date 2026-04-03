@@ -1,0 +1,329 @@
+# Nihanvi School of Dance — Complete Website Brief
+
+## What This Is
+
+**Nihanvi School of Dance** is a Kuchipudi classical dance school run by a single teacher. This website is a **fully private, invite-only portal platform** — there is no public-facing page. The only people who can access the site are the teacher and enrolled students. The teacher manages everything through her dashboard; students access their homework, announcements, events, and payment info through their portal.
+
+The primary audience (students and parents) uses this site **primarily on phones**, so every UI decision must be **mobile-first**.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 14.2 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v3 |
+| Database | PostgreSQL via Neon (serverless) |
+| ORM | Prisma v7 |
+| Auth | NextAuth v4 (credentials provider, JWT sessions) |
+| Email | Resend |
+| Messaging (V2) | WhatsApp (via Twilio or WhatsApp Business API — not built yet) |
+| Testing | Vitest + Testing Library |
+| Deployment | Vercel |
+| Node | >= 20.19 |
+
+**Key dependencies:** `bcryptjs` (password hashing), `next-auth`, `@prisma/client`, `resend`, `twilio`
+
+---
+
+## Design System
+
+### Brand Colors
+Defined in `tailwind.config.ts` as custom tokens. **Always use these token names — never raw hex or generic Tailwind palette colors.**
+
+| Token | Hex | Usage |
+|---|---|---|
+| `brand-orange` | `#E8820C` | Primary CTA buttons, links, accents |
+| `brand-yellow` | `#F5C518` | Highlight text (e.g. email headers) |
+| `brand-red` | `#C0392B` | Required field asterisks, error messages |
+| `brand-brown-dark` | `#3d1a00` | Headings, dark backgrounds |
+| `brand-brown-mid` | `#7a2800` | Hover state for orange buttons, secondary dark |
+| `brand-cream` | `#FFF8F0` | Page backgrounds on unauthenticated pages |
+
+### Fonts
+- **Body:** Inter (Google Fonts, loaded via `next/font`)
+- **Display/Logo:** Lobster Two (Google Fonts, weight 400, loaded as CSS variable `--font-lobster-two`, applied via `font-display` Tailwind class)
+
+### General UI Patterns
+- Cards: `bg-white rounded-2xl border border-gray-100 shadow-sm p-6`
+- Input fields: `w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white`
+- Primary buttons: `bg-brand-orange text-white font-bold py-4 rounded-lg text-sm hover:bg-brand-brown-mid transition-colors disabled:opacity-50`
+- Page background (unauthenticated): `bg-brand-cream`
+- Page background (authenticated portals): `bg-gray-50`
+- Sidebar layout: fixed sidebar 240px wide on desktop (`lg:pl-60`), top bar on mobile (`pt-14`)
+
+---
+
+## Architecture
+
+### Request Flow
+`Browser → Next.js Server Component (data fetch) → renders Client Component with Server Action → Server Action calls src/lib/ → Prisma → Neon PostgreSQL`
+
+### Key Layers
+- **`src/lib/`** — Pure business logic, no Next.js imports. Testable in isolation. Each file owns one domain: `db.ts` (Prisma singleton), `users.ts`, `registrations.ts`, `tokens.ts`, `email.ts`, `sms.ts`, `auth.ts`, `homework.ts`, `announcements.ts`, `events.ts`, `payments.ts`, `submissions.ts`, `rsvps.ts`
+- **`src/app/**/actions.ts`** — Server Actions (`'use server'`). Validate input, call `src/lib/`, then redirect or return `{ status: 'error', message }`
+- **`src/components/forms/`** — Client Components (`'use client'`). Use `useFormState` + `useFormStatus` from `react-dom` (React 18 — **not** `useActionState` which is React 19 only). `SubmitButton` must be a separate child component to access `useFormStatus` context
+- **`src/app/**/page.tsx`** — Server Components by default. Fetch data directly, pass to Client Components
+
+### Prisma v7 Note
+Prisma 7 does **not** allow `url =` in `schema.prisma`. The database URL is configured exclusively in `prisma.config.ts` (reads `process.env.DATABASE_URL`). `prisma.config.ts` also loads `.env.local` via dotenv for local dev. On Vercel the env var is injected directly.
+
+Enum values in schema are **uppercase** (`TEACHER`, `STUDENT`, `YES`, `NO`, etc.) — use uppercase string literals everywhere in application code.
+
+---
+
+## Database Schema
+
+```prisma
+enum UserRole       { TEACHER  STUDENT }
+enum HomeworkTarget { ALL  LEVEL  STUDENT }
+enum RsvpResponse   { YES  NO  MAYBE }
+enum PaymentMethod  { ZELLE  CASH  OTHER }
+enum PaymentStatus  { PENDING  PAID  OVERDUE }
+```
+
+### Models
+
+**`User`** — all accounts (teacher and students)
+- `id`, `name`, `email` (unique), `passwordHash`, `role` (UserRole), `levelGroup` (nullable string — e.g. "Beginner", "Intermediate"), `registrationId` (optional link to Registration), `setupToken`, `setupTokenUsed`, `setupTokenExpires`, `active` (bool, default true), `createdAt`
+- Relations: `homeworkTargeted`, `submissions`, `rsvps`, `payments`, `registration`
+
+**`Registration`** — enrollment form submission data (one per enrolled student)
+- `id`, `studentName`, `dateOfBirth` (DateTime — **no age field, only DOB**), `parentName`, `primaryPhone`, `alternativePhone` (nullable), `address`, `email`, `experience` (nullable), `certificationInterest` (bool), `performanceInterest` (bool), `medicalConditions` (nullable), `signature`, `signedDate`, `createdAt`
+- Relations: `user` (one-to-one, optional — a Registration exists before a User account is created)
+- Note: Registration has an `enrollToken` and `tokenUsed` tracked on a related record — see enrollment flow below
+
+**`Homework`**
+- `id`, `targetType` (HomeworkTarget), `targetLevel` (nullable), `targetStudentId` (nullable), `youtubeUrl`, `description` (nullable), `dueDate` (nullable), `archived` (bool), `postedAt`
+- Relations: `targetStudent`, `submissions`
+
+**`Submission`**
+- `id`, `homeworkId`, `studentId`, `markedDone` (bool), `doneAt` (nullable), `videoUrl` (nullable), `teacherFeedback` (nullable), `updatedAt`
+- Unique on `[homeworkId, studentId]`
+
+**`Announcement`**
+- `id`, `targetLevel` (nullable — null means all students), `body`, `postedAt`
+
+**`Event`**
+- `id`, `title`, `eventDate`, `description` (nullable), `createdAt`
+- Relations: `rsvps`
+
+**`Rsvp`**
+- `id`, `eventId`, `studentId`, `response` (RsvpResponse), `updatedAt`
+- Unique on `[eventId, studentId]`
+
+**`Payment`**
+- `id`, `studentId`, `amount` (Int, stored in cents), `dueDate`, `paidDate` (nullable), `method` (PaymentMethod, nullable), `status` (PaymentStatus, default PENDING), `notes` (nullable), `createdAt`
+
+---
+
+## Authentication
+
+- **Provider:** NextAuth v4 credentials provider
+- **Session strategy:** JWT
+- **Password hashing:** bcryptjs
+- **Two roles:** `TEACHER` and `STUDENT`
+- **Login page:** `/login`
+- **On login:** teacher → `/dashboard`, student → `/portal`
+- **Middleware** protects `/portal/*` and `/dashboard/*`. Teachers hitting `/portal` redirect to `/dashboard`. Students hitting `/dashboard` redirect to `/portal`. All other unauthenticated access redirects to `/login`
+- **Root URL `/`** redirects to `/login` — there is no public landing page
+
+---
+
+## Route Structure
+
+### Public (no auth required)
+| Route | Purpose |
+|---|---|
+| `/login` | Login form. On success redirects based on role |
+| `/setup-password/[token]` | New student sets their password after being added |
+| `/enroll/[token]` | Enrollment form — only accessible via a unique link the teacher generates |
+| `/enroll/success` | Confirmation shown after enrollment form is submitted |
+
+### Teacher Dashboard (`/dashboard/*`)
+Protected — teacher role only. Layout has a sidebar nav.
+
+| Route | Purpose |
+|---|---|
+| `/dashboard` | Overview / home |
+| `/dashboard/students` | List of all students + pending accounts |
+| `/dashboard/students/[id]` | Individual student detail: registration info, submissions, payments |
+| `/dashboard/homework` | Manage homework assignments (create, archive) |
+| `/dashboard/announcements` | Post and manage announcements |
+| `/dashboard/events` | Create and manage events |
+| `/dashboard/payments` | Track payment records across all students |
+
+### Student Portal (`/portal/*`)
+Protected — student role only. Layout has a sidebar nav.
+
+| Route | Purpose |
+|---|---|
+| `/portal` | Portal home |
+| `/portal/announcements` | View announcements posted by the teacher |
+| `/portal/homework` | View assigned homework, mark done, submit video URL |
+| `/portal/events` | View upcoming events, RSVP (Yes / No / Maybe) |
+
+---
+
+## Key Features & Flows
+
+### How New Students Are Added (Two Paths)
+
+**Path 1 — Enrollment Form (invite-only)**
+1. Teacher generates a unique tokenized enrollment link from within her dashboard
+2. Teacher copies the link and sends it to the prospective student (via text, email, etc.)
+3. Student opens `/enroll/[token]` and fills out the enrollment form
+4. On submission, a `Registration` record is created in a `prisma.$transaction`
+5. The teacher receives an email notification with all the submitted details (via Resend)
+6. The student receives a confirmation email (via Resend)
+7. The token is marked as used — the link cannot be reused
+8. Teacher then goes to `/dashboard/students`, sees the new registration, selects a level group, clicks "Create Account" — this creates a `User` record and emails the student a setup link
+9. Student clicks the setup link at `/setup-password/[token]`, sets their password, and can now log in
+
+**Path 2 — Manual Add (teacher directly creates a student)**
+1. Teacher clicks "Add Student" button in the dashboard
+2. Fills in the student's basic info (name, email, level group)
+3. A `User` record is created immediately
+4. A setup email is sent to the student with a `/setup-password/[token]` link to set their password
+
+### Enrollment Form Fields
+The form at `/enroll/[token]` collects:
+- **Student Details:** Full name, date of birth
+- **Parent/Guardian Details:** Name, primary phone, alternative phone
+- **Home Address:** Street, city, state/province, ZIP, country (US state is a dropdown; other countries get a text field; phone fields have country code selector)
+- **Contact:** Email address
+- **Additional Info:** Prior dance experience (optional), certification interest (yes/no toggle), performance interest (yes/no toggle), medical conditions (optional)
+- **Declaration:** Typed full name as signature (date auto-set to today, hidden)
+
+### Homework System
+- Teacher creates homework with a YouTube URL, optional description, optional due date
+- Target can be: ALL students, a specific LEVEL group, or a specific STUDENT
+- Students see only homework assigned to them (all, their level, or specifically them)
+- Students can mark homework done and optionally submit a video URL
+- Teacher can see submission status and leave feedback per student per assignment
+- Homework can be archived (hidden from students, kept in records)
+
+### Announcements System
+- Teacher posts announcements with a body text
+- Optional `targetLevel` — if set, only students in that level see it; if null, all students see it
+
+### Events System
+- Teacher creates events with a title, date, optional description
+- Students can RSVP: Yes, No, or Maybe
+- Teacher can see RSVP counts per event
+
+### Payments System
+
+**Teacher-side (`/dashboard/payments`):**
+- The payments page lists all students with their current month's payment status
+- The teacher can search by name, filter by level group, filter by payment status, and sort (newest first / oldest first)
+- Each student row shows: name, email, level group, join date, and current month payment status badge (Pending / Paid / Overdue)
+- Clicking "Record Payment" on a student's row expands an inline form with:
+  - Amount (in dollars — converted to cents on save)
+  - Method (Zelle, Cash, Other)
+  - Notes (optional — e.g. "Jan + Feb combined")
+  - "Mark Paid" button that saves the record with today's date as `paidDate`
+
+**Student profile (`/dashboard/students/[id]`):**
+- The student detail page shows three sections: Registration Details, Submissions, and Payments
+- The Payments section lists every payment record for that student, showing:
+  - Amount (e.g. $100.00)
+  - Due date (e.g. Due Mar 5, 2026)
+  - **Date paid** (e.g. Paid Mar 23, 2026) — must be displayed when `paidDate` is set
+  - Payment method (e.g. via ZELLE)
+  - Notes (if any)
+  - Status badge (PAID / PENDING / OVERDUE)
+- The teacher can also add a comment/note on the student's profile (free-text field, saved against the student record)
+
+**Student portal (`/portal`):**
+- Students can view their own payment history with the same fields: amount, due date, paid date, method, notes, status
+
+---
+
+## Email & Messaging Notifications
+
+All emails are fire-and-forget: wrapped in `.catch(console.error)`, never thrown, never block the user response.
+
+**V1 — Email only.** All notifications are sent via email (Resend). No SMS, no WhatsApp in V1.
+
+**V2 — WhatsApp.** Once V1 is stable, the plan is to add WhatsApp as a messaging channel. WhatsApp is the end goal for real-time notifications (not plain SMS). Twilio env vars in the codebase are legacy placeholders and should be ignored until V2 work begins.
+
+| Trigger | Recipient | Channel | Content |
+|---|---|---|---|
+| Student completes enrollment form | Teacher (`NOTIFICATION_EMAIL`) | Email | Full registration details in HTML email |
+| Student completes enrollment form | Student | Email | Confirmation with school rules (see below) |
+| Teacher creates a student account | Student | Email | Welcome + setup link to set password |
+
+**From address:** `Nihanvi School of Dance <onboarding@resend.dev>` (placeholder — swap for verified domain before launch)
+
+### School Rules — Included in Enrollment Confirmation (Email & SMS)
+
+The following rules must be included verbatim in the confirmation email and SMS sent to the student after they complete the enrollment form:
+
+> **Class Fee Policy**
+> 1. All class fees MUST be paid in full regardless of student absence.
+> 2. Lessons missed due to absence will be taught in the subsequent class and/or a makeup class.
+>
+> **Monthly Payment**
+> 1. Fee is due in advance at the beginning of every month (no later than the 5th).
+> 2. No fee proration without prior discussion with the teacher.
+> 3. Payment is sent via Zelle to the teacher's registered number.
+
+The Zelle number is stored in an environment variable (`ZELLE_NUMBER`) so it can be updated without a code change. It is substituted into the rules text at send time.
+
+---
+
+## Environment Variables
+
+| Variable | Purpose |
+|---|---|
+| `DATABASE_URL` | Neon PostgreSQL connection string |
+| `NEXTAUTH_SECRET` | NextAuth JWT secret |
+| `NEXTAUTH_URL` | Full site URL (e.g. `https://nihanvi.com`) |
+| `NEXT_PUBLIC_SITE_URL` | Public site URL used in enrollment/setup links |
+| `RESEND_API_KEY` | Resend API key for email |
+| `NOTIFICATION_EMAIL` | Teacher's email address (receives enrollment notifications) |
+| `TWILIO_ACCOUNT_SID` | Legacy placeholder — not used in V1, revisit for V2 WhatsApp |
+| `TWILIO_AUTH_TOKEN` | Legacy placeholder — not used in V1, revisit for V2 WhatsApp |
+| `TWILIO_PHONE_NUMBER` | Legacy placeholder — not used in V1, revisit for V2 WhatsApp |
+| `ZELLE_NUMBER` | Teacher's Zelle number — included in enrollment confirmation email and SMS |
+
+All external URLs use `process.env.NEXT_PUBLIC_SITE_URL` — never hardcoded.
+
+---
+
+## Dev Commands
+
+```bash
+npm run dev                              # Dev server at http://localhost:3000
+npm test                                 # Run all tests
+npx vitest run src/tests/lib/foo.test.ts # Run a single test file
+npm run build                            # Production build (runs prisma generate first)
+npx prisma migrate dev --name <name>     # Create and apply a migration
+npx prisma studio                        # Browse the database
+npm run seed                             # Seed the database (tsx prisma/seed.ts)
+```
+
+---
+
+## Testing Conventions
+
+- Tests live in `src/tests/`
+- All external dependencies are mocked — never hit a real database or send real emails/SMS
+- **Prisma mock:** import `src/tests/mocks/prisma.ts` at the top of any lib test. Replaces `@/lib/db` with `prismaMock` via `vi.mock`
+- **Mock hoisting:** use `vi.hoisted(() => vi.fn())` for any constant used inside a `vi.mock()` factory (required by Vitest 4.x)
+- **Env guards:** `src/tests/setup.ts` seeds `NOTIFICATION_EMAIL` and `TWILIO_PHONE_NUMBER` so email/SMS guards don't short-circuit
+- `next/navigation`'s `redirect` throws internally — wrap in try/catch or assert on the mock when testing redirect behavior
+
+---
+
+## Code Conventions
+
+- Mobile-first Tailwind: base class = mobile, then `sm:` / `md:` / `lg:` for larger screens
+- Minimum touch targets 44×44px, minimum body font size 16px
+- Client components that need form state use `useFormState` + `useFormStatus` from `react-dom` (React 18)
+- `SubmitButton` is always a separate child component (needed to access `useFormStatus` context)
+- Amounts stored in **cents** (integer) in the database, displayed as dollars in the UI
+- `levelGroup` is a free-text string (e.g. "Beginner", "Intermediate", "Advanced") — not an enum
