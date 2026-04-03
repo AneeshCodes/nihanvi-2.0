@@ -1,0 +1,174 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  TEACHER
+  STUDENT
+}
+
+enum TokenType {
+  SETUP
+  RESET
+}
+
+enum HomeworkTarget {
+  ALL
+  LEVEL
+  STUDENT
+}
+
+enum RsvpResponse {
+  YES
+  NO
+  MAYBE
+}
+
+enum PaymentMethod {
+  ZELLE
+  CASH
+  OTHER
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  OVERDUE
+}
+
+model User {
+  id                    String    @id @default(cuid())
+  name                  String
+  email                 String    @unique
+  passwordHash          String
+  role                  UserRole
+  levelGroup            String?
+  registrationId        String?   @unique
+  active                Boolean   @default(true)
+  passwordLastChangedAt DateTime?
+  createdAt             DateTime  @default(now())
+
+  registration   Registration? @relation(fields: [registrationId], references: [id])
+  tokens         Token[]
+  homeworkTargeted Homework[]
+  submissions    Submission[]
+  rsvps          Rsvp[]
+  payments       Payment[]
+}
+
+model Token {
+  id        String    @id @default(cuid())
+  userId    String
+  type      TokenType
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// Registration.email is NOT @unique — a parent may enroll multiple children.
+// User.email IS @unique.
+model Registration {
+  id                    String   @id @default(cuid())
+  studentName           String
+  dateOfBirth           DateTime
+  parentName            String
+  primaryPhone          String
+  alternativePhone      String?
+  address               String
+  email                 String
+  experience            String?
+  certificationInterest Boolean
+  performanceInterest   Boolean
+  medicalConditions     String?
+  signature             String
+  signedDate            DateTime
+  enrollToken           String?  @unique
+  tokenUsed             Boolean  @default(false)
+  createdAt             DateTime @default(now())
+
+  user                  User?
+}
+
+model Homework {
+  id              String         @id @default(cuid())
+  targetType      HomeworkTarget
+  targetLevel     String?
+  targetStudentId String?
+  youtubeUrl      String
+  description     String?
+  dueDate         DateTime?
+  archived        Boolean        @default(false)
+  postedAt        DateTime       @default(now())
+
+  targetStudent   User?          @relation(fields: [targetStudentId], references: [id])
+  submissions     Submission[]
+}
+
+model Submission {
+  id              String    @id @default(cuid())
+  homeworkId      String
+  studentId       String
+  markedDone      Boolean   @default(false)
+  doneAt          DateTime?
+  videoUrl        String?
+  teacherFeedback String?
+  updatedAt       DateTime  @updatedAt
+
+  homework  Homework  @relation(fields: [homeworkId], references: [id])
+  student   User      @relation(fields: [studentId], references: [id])
+
+  @@unique([homeworkId, studentId])
+}
+
+model Announcement {
+  id          String   @id @default(cuid())
+  targetLevel String?
+  body        String
+  postedAt    DateTime @default(now())
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  eventDate   DateTime
+  description String?
+  createdAt   DateTime @default(now())
+
+  rsvps       Rsvp[]
+}
+
+model Rsvp {
+  id        String       @id @default(cuid())
+  eventId   String
+  studentId String
+  response  RsvpResponse
+  updatedAt DateTime     @updatedAt
+
+  event   Event @relation(fields: [eventId], references: [id])
+  student User  @relation(fields: [studentId], references: [id])
+
+  @@unique([eventId, studentId])
+}
+
+model Payment {
+  id        String         @id @default(cuid())
+  studentId String
+  amount    Int
+  dueDate   DateTime
+  paidDate  DateTime?
+  method    PaymentMethod?
+  status    PaymentStatus  @default(PENDING)
+  notes     String?
+  createdAt DateTime       @default(now())
+
+  student   User           @relation(fields: [studentId], references: [id])
+}
