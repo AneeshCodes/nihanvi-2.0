@@ -2,7 +2,7 @@
 'use client'
 
 import { useState } from 'react'
-import { signIn, getSession } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
@@ -28,14 +28,8 @@ export function LoginForm() {
       return
     }
 
-    // Read role from session to determine redirect target
-    const session = await getSession()
-    setLoading(false)
-    if (session?.user?.role === 'TEACHER') {
-      router.push('/dashboard')
-    } else {
-      router.push('/portal')
-    }
+    // Redirect to /dashboard — middleware redirects students to /portal automatically
+    router.push('/dashboard')
   }
 
   return (
