@@ -55,7 +55,7 @@ export default async function PortalPage() {
           <ul className="divide-y divide-gray-50">
             {announcements.map((a) => (
               <li key={a.id} className="px-5 py-4">
-                <div className="text-sm text-gray-800">{a.body}</div>
+                <div className="text-sm text-gray-800 line-clamp-2">{a.body}</div>
                 <div className="text-xs text-gray-400 mt-0.5">
                   {new Date(a.postedAt).toLocaleDateString()}
                 </div>
