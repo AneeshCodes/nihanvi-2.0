@@ -14,6 +14,7 @@ export default withAuth(
     if (pathname.startsWith('/portal') && token?.role !== 'STUDENT') {
       return NextResponse.redirect(new URL('/dashboard', req.url))
     }
+    return NextResponse.next()
   },
   {
     callbacks: {
