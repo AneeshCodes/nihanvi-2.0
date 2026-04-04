@@ -8,4 +8,7 @@ dotenv.config({ path: path.join(process.cwd(), '.env.local') })
 
 export default defineConfig({
   schema: 'prisma/schema.prisma',
+  datasource: {
+    url: process.env.DATABASE_URL!,
+  },
 })

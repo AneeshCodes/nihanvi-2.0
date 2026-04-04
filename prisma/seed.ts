@@ -1,12 +1,18 @@
 // prisma/seed.ts
 import { PrismaClient } from '@prisma/client'
+import { PrismaNeon } from '@prisma/adapter-neon'
+import { neonConfig } from '@neondatabase/serverless'
 import bcrypt from 'bcryptjs'
 import dotenv from 'dotenv'
 import path from 'path'
+import ws from 'ws'
 
 dotenv.config({ path: path.join(process.cwd(), '.env.local') })
 
-const db = new PrismaClient()
+neonConfig.webSocketConstructor = ws
+
+const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL! })
+const db = new PrismaClient({ adapter })
 
 async function main() {
   const passwordHash = await bcrypt.hash('nihanvi123', 12)
