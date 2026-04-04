@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function ForgotPasswordSentPage() {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-center">
@@ -15,9 +17,9 @@ export default function ForgotPasswordSentPage() {
         If an account exists for that address, you'll receive a reset link shortly.
       </p>
 
-      <a href="/login" className="text-sm text-brand-orange hover:text-brand-brown-mid py-3 inline-block">
+      <Link href="/login" className="text-sm text-brand-orange hover:text-brand-brown-mid py-3 inline-flex items-center min-h-[44px]">
         Back to sign in
-      </a>
+      </Link>
     </div>
   )
 }

@@ -51,8 +51,7 @@ export default function SetupPasswordPage({ params }: { params: { token: string 
                        focus:outline-none focus:ring-2 focus:ring-brand-orange bg-white"
           />
           <p className="mt-1 text-xs text-gray-400">At least 8 characters</p>
-          {state?.status === 'error' && state.message !== 'token_invalid' &&
-            !state.message.includes('match') && (
+          {state?.status === 'error' && state.field === 'password' && (
             <p role="alert" className="mt-1 text-sm text-brand-red">{state.message}</p>
           )}
         </div>
@@ -70,7 +69,7 @@ export default function SetupPasswordPage({ params }: { params: { token: string 
             className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm
                        focus:outline-none focus:ring-2 focus:ring-brand-orange bg-white"
           />
-          {state?.message?.includes('match') && (
+          {state?.status === 'error' && state.field === 'confirmPassword' && (
             <p role="alert" className="mt-1 text-sm text-brand-red">{state.message}</p>
           )}
         </div>

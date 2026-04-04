@@ -5,7 +5,7 @@ import { validateAndConsumeToken } from '@/lib/tokens'
 import { setPassword } from '@/lib/users'
 
 export async function setupPasswordAction(
-  _prevState: { status: string; message: string } | null,
+  _prevState: { status: string; message: string; field?: string } | null,
   formData: FormData
 ) {
   const token           = formData.get('token')           as string
@@ -13,15 +13,15 @@ export async function setupPasswordAction(
   const confirmPassword = formData.get('confirmPassword') as string
 
   if (password.length < 8) {
-    return { status: 'error', message: 'Password must be at least 8 characters.' }
+    return { status: 'error', message: 'Password must be at least 8 characters.', field: 'password' }
   }
   if (password !== confirmPassword) {
-    return { status: 'error', message: 'Passwords do not match.' }
+    return { status: 'error', message: 'Passwords do not match.', field: 'confirmPassword' }
   }
 
   const result = await validateAndConsumeToken(token, 'SETUP')
   if (!result.valid) {
-    return { status: 'error', message: 'token_invalid' }
+    return { status: 'error', message: 'token_invalid', field: 'token' }
   }
 
   await setPassword(result.userId, password)
