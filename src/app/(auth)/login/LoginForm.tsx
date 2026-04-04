@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import { signIn, getSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export function LoginForm() {
   const router  = useRouter()
@@ -29,6 +30,7 @@ export function LoginForm() {
 
     // Read role from session to determine redirect target
     const session = await getSession()
+    setLoading(false)
     if (session?.user?.role === 'TEACHER') {
       router.push('/dashboard')
     } else {
@@ -100,12 +102,12 @@ export function LoginForm() {
       </form>
 
       <div className="text-center mt-4">
-        <a
+        <Link
           href="/forgot-password"
-          className="text-sm text-brand-orange hover:text-brand-brown-mid py-3 inline-block min-h-[44px] flex items-center justify-center"
+          className="text-sm text-brand-orange hover:text-brand-brown-mid py-3 inline-flex items-center justify-center min-h-[44px]"
         >
           Forgot password?
-        </a>
+        </Link>
       </div>
     </div>
   )
