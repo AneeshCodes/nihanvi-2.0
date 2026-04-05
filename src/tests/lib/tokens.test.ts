@@ -22,7 +22,8 @@ describe('createToken', () => {
 
 describe('validateAndConsumeToken', () => {
   it('returns not_found when token does not exist', async () => {
-    prismaM.$transaction.mockImplementation((fn: any) => fn({ token: { findUnique: vi.fn().mockResolvedValue(null), update: vi.fn() } }))
+    prismaM.$transaction.mockImplementation(// eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (fn: any) => fn({ token: { findUnique: vi.fn().mockResolvedValue(null), update: vi.fn() } }))
     const result = await validateAndConsumeToken('bad-token', 'RESET')
     expect(result).toEqual({ valid: false, reason: 'not_found' })
   })
@@ -34,7 +35,8 @@ describe('validateAndConsumeToken', () => {
         update: vi.fn(),
       },
     }
-    prismaM.$transaction.mockImplementation((fn: any) => fn(mockTx))
+    prismaM.$transaction.mockImplementation(// eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (fn: any) => fn(mockTx))
     const result = await validateAndConsumeToken('tok', 'RESET')
     expect(result).toEqual({ valid: false, reason: 'wrong_type' })
   })
@@ -46,7 +48,8 @@ describe('validateAndConsumeToken', () => {
         update: vi.fn(),
       },
     }
-    prismaM.$transaction.mockImplementation((fn: any) => fn(mockTx))
+    prismaM.$transaction.mockImplementation(// eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (fn: any) => fn(mockTx))
     const result = await validateAndConsumeToken('tok', 'RESET')
     expect(result).toEqual({ valid: false, reason: 'expired' })
   })
@@ -58,7 +61,8 @@ describe('validateAndConsumeToken', () => {
         update: vi.fn(),
       },
     }
-    prismaM.$transaction.mockImplementation((fn: any) => fn(mockTx))
+    prismaM.$transaction.mockImplementation(// eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (fn: any) => fn(mockTx))
     const result = await validateAndConsumeToken('tok', 'RESET')
     expect(result).toEqual({ valid: false, reason: 'already_used' })
   })
@@ -71,7 +75,8 @@ describe('validateAndConsumeToken', () => {
         update: updateMock,
       },
     }
-    prismaM.$transaction.mockImplementation((fn: any) => fn(mockTx))
+    prismaM.$transaction.mockImplementation(// eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (fn: any) => fn(mockTx))
     const result = await validateAndConsumeToken('tok', 'RESET')
     expect(result).toEqual({ valid: true, userId: 'u1' })
     expect(updateMock).toHaveBeenCalledWith({

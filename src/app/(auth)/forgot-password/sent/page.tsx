@@ -14,7 +14,7 @@ export default function ForgotPasswordSentPage() {
 
       <h2 className="text-xl font-bold text-brand-brown-dark mb-2">Check your email</h2>
       <p className="text-sm text-gray-500 mb-6">
-        If an account exists for that address, you'll receive a reset link shortly.
+        If an account exists for that address, you&apos;ll receive a reset link shortly.
       </p>
 
       <Link href="/login" className="text-sm text-brand-orange hover:text-brand-brown-mid py-3 inline-flex items-center min-h-[44px]">
