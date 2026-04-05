@@ -43,7 +43,7 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string): Prom
 }
 
 export async function sendEnrollmentInviteEmail(to: string, enrollUrl: string): Promise<void> {
-  sendEmail(
+  await sendEmail(
     to,
     "You're invited to Nihanvi School of Dance",
     `
@@ -54,7 +54,7 @@ export async function sendEnrollmentInviteEmail(to: string, enrollUrl: string): 
       <p>This link is unique to you. If you did not expect this email, you can ignore it.</p>
       <p>— Nihanvi School of Dance</p>
     `
-  ).catch(console.error)
+  )
 }
 
 export async function sendSetupPasswordEmail(to: string, studentName: string, setupUrl: string): Promise<void> {
