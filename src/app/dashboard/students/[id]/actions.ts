@@ -36,10 +36,16 @@ export async function unenrollStudentAction(userId: string) {
   const session = await getServerSession(authOptions)
   if (!session || session.user?.role !== 'TEACHER') redirect('/login')
 
-  await db.user.update({
-    where: { id: userId },
-    data: { active: false },
-  })
+  await db.user.update({ where: { id: userId }, data: { active: false } })
   revalidatePath('/dashboard/students')
   redirect('/dashboard/students')
+}
+
+export async function reactivateStudentAction(userId: string) {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user?.role !== 'TEACHER') redirect('/login')
+
+  await db.user.update({ where: { id: userId }, data: { active: true } })
+  revalidatePath('/dashboard/students')
+  revalidatePath(`/dashboard/students/${userId}`)
 }

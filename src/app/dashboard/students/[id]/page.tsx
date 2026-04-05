@@ -6,7 +6,7 @@ import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { ResendSetupButton } from './ResendSetupButton'
 import { LevelGroupForm } from './LevelGroupForm'
-import { unenrollStudentAction } from './actions'
+import { unenrollStudentAction, reactivateStudentAction } from './actions'
 
 function formatDate(d: Date) {
   return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -123,24 +123,42 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
         </div>
       )}
 
-      {/* Unenroll */}
-      {student.active && (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-          <h2 className="font-semibold text-gray-800 mb-1">Unenroll student</h2>
-          <p className="text-sm text-gray-500 mb-4">
-            This will deactivate the student&apos;s account. Their data is preserved and can be reactivated later.
-          </p>
-          <form action={unenrollStudentAction.bind(null, student.id)}>
-            <button
-              type="submit"
-              className="w-full border-2 border-brand-red text-brand-red font-bold py-3 rounded-lg text-sm
-                         hover:bg-red-50 transition-colors min-h-[44px]"
-            >
-              Unenroll {student.name}
-            </button>
-          </form>
-        </div>
-      )}
+      {/* Enrolment status */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+        {student.active ? (
+          <>
+            <h2 className="font-semibold text-gray-800 mb-1">Unenroll student</h2>
+            <p className="text-sm text-gray-500 mb-4">
+              Deactivates the account. All data is preserved and the student can be reactivated at any time.
+            </p>
+            <form action={unenrollStudentAction.bind(null, student.id)}>
+              <button
+                type="submit"
+                className="w-full border-2 border-brand-red text-brand-red font-bold py-3 rounded-lg text-sm
+                           hover:bg-red-50 transition-colors min-h-[44px]"
+              >
+                Unenroll {student.name}
+              </button>
+            </form>
+          </>
+        ) : (
+          <>
+            <h2 className="font-semibold text-gray-800 mb-1">Reactivate student</h2>
+            <p className="text-sm text-gray-500 mb-4">
+              This student is currently inactive. Reactivating will restore their portal access immediately.
+            </p>
+            <form action={reactivateStudentAction.bind(null, student.id)}>
+              <button
+                type="submit"
+                className="w-full bg-brand-orange text-white font-bold py-3 rounded-lg text-sm
+                           hover:bg-brand-brown-mid transition-colors min-h-[44px]"
+              >
+                Reactivate {student.name}
+              </button>
+            </form>
+          </>
+        )}
+      </div>
 
       {/* Recent payments */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
