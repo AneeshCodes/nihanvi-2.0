@@ -16,42 +16,62 @@ export function CreateEventForm() {
         <p className="text-sm text-brand-red bg-red-50 rounded-lg px-4 py-2">{state.message}</p>
       )}
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Title <span className="text-brand-red">*</span>
-        </label>
-        <input
-          name="title"
-          type="text"
-          required
-          placeholder="e.g. Spring Recital"
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
-        />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Title <span className="text-brand-red">*</span>
+          </label>
+          <input
+            name="title"
+            type="text"
+            required
+            placeholder="e.g. Annual Recital"
+            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Date <span className="text-brand-red">*</span>
+          </label>
+          <input
+            name="eventDate"
+            type="date"
+            required
+            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white [color-scheme:light]"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Time <span className="text-brand-red">*</span>
+          </label>
+          <input
+            name="eventTime"
+            type="time"
+            required
+            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white [color-scheme:light]"
+          />
+        </div>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Date &amp; time <span className="text-brand-red">*</span>
+          Description <span className="text-gray-400 font-normal">(optional — location, dress code, etc.)</span>
         </label>
-        <input
-          name="eventDate"
-          type="datetime-local"
-          required
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description / location</label>
         <textarea
           name="description"
           rows={3}
-          placeholder="Location, dress code, notes..."
+          placeholder="Location, dress code, etc."
           className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white resize-none"
         />
       </div>
 
-      <SubmitButton label="Create Event" pendingLabel="Creating..." />
+      <div className="flex justify-end">
+        <div className="w-full sm:w-auto sm:min-w-[160px]">
+          <SubmitButton label="Create Event" pendingLabel="Creating..." />
+        </div>
+      </div>
     </form>
   )
 }

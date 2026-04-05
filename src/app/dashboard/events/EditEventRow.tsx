@@ -19,10 +19,16 @@ type EventData = {
   rsvps: RsvpEntry[]
 }
 
-const toDatetimeLocal = (d: Date) => {
+const pad = (n: number) => String(n).padStart(2, '0')
+
+const toDateInput = (d: Date) => {
   const dt = new Date(d)
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`
+  return `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())}`
+}
+
+const toTimeInput = (d: Date) => {
+  const dt = new Date(d)
+  return `${pad(dt.getHours())}:${pad(dt.getMinutes())}`
 }
 
 export function EventItem({ event: e, past = false }: { event: EventData; past?: boolean }) {
@@ -34,7 +40,11 @@ export function EventItem({ event: e, past = false }: { event: EventData; past?:
     <li className={`px-5 py-4${past ? ' opacity-60' : ''}`}>
       {/* Content row */}
       <div className="flex items-start gap-3">
-        <div className={`rounded-lg px-2 py-1 text-center min-w-[44px] shrink-0 ${past ? 'bg-gray-100' : 'bg-brand-orange/10'}`}>
+        <div
+          className={`rounded-lg px-2 py-1 text-center min-w-[44px] shrink-0 ${
+            past ? 'bg-gray-100' : 'bg-brand-orange/10'
+          }`}
+        >
           <div className={`text-xs font-bold ${past ? 'text-gray-500' : 'text-brand-orange'}`}>
             {new Date(e.eventDate).toLocaleDateString('en-US', { month: 'short' }).toUpperCase()}
           </div>
@@ -43,12 +53,17 @@ export function EventItem({ event: e, past = false }: { event: EventData; past?:
           </div>
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-medium text-sm text-gray-800">{e.title}</div>
+          <div className="font-semibold text-sm text-gray-800">{e.title}</div>
           <div className="text-xs text-gray-400 mt-0.5">
+            {new Date(e.eventDate).toLocaleDateString('en-US', {
+              weekday: 'short', month: 'short', day: 'numeric', year: 'numeric',
+            })}{', '}
             {new Date(e.eventDate).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
-            {e.description && ` · ${e.description}`}
           </div>
-          <div className="mt-1">
+          {e.description && (
+            <div className="text-xs text-gray-500 mt-0.5">{e.description}</div>
+          )}
+          <div className="mt-1.5">
             <RsvpBreakdown rsvps={e.rsvps} />
           </div>
         </div>
@@ -82,26 +97,37 @@ export function EventItem({ event: e, past = false }: { event: EventData; past?:
               <p className="text-xs text-green-600 bg-green-50 rounded-lg px-3 py-2">{state.message}</p>
             )}
 
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Title</label>
-              <input
-                name="title"
-                type="text"
-                required
-                defaultValue={e.title}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Date &amp; time</label>
-              <input
-                name="eventDate"
-                type="datetime-local"
-                required
-                defaultValue={toDatetimeLocal(e.eventDate)}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white [color-scheme:light]"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Title</label>
+                <input
+                  name="title"
+                  type="text"
+                  required
+                  defaultValue={e.title}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Date</label>
+                <input
+                  name="eventDate"
+                  type="date"
+                  required
+                  defaultValue={toDateInput(e.eventDate)}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white [color-scheme:light]"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Time</label>
+                <input
+                  name="eventTime"
+                  type="time"
+                  required
+                  defaultValue={toTimeInput(e.eventDate)}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white [color-scheme:light]"
+                />
+              </div>
             </div>
 
             <div>

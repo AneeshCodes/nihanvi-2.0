@@ -3,19 +3,27 @@
 import { revalidatePath } from 'next/cache'
 import { db } from '@/lib/db'
 
+function combineDateTime(date: string, time: string): Date | null {
+  if (!date || !time) return null
+  const d = new Date(`${date}T${time}`)
+  return isNaN(d.getTime()) ? null : d
+}
+
 export async function createEventAction(
   _prev: { status: string; message: string } | null,
   formData: FormData
 ) {
   const title       = (formData.get('title')       as string).trim()
   const eventDateRaw = formData.get('eventDate')   as string
+  const eventTimeRaw = formData.get('eventTime')   as string
   const description = (formData.get('description') as string | null)?.trim() || null
 
   if (!title)        return { status: 'error', message: 'Title is required.' }
-  if (!eventDateRaw) return { status: 'error', message: 'Event date is required.' }
+  if (!eventDateRaw) return { status: 'error', message: 'Date is required.' }
+  if (!eventTimeRaw) return { status: 'error', message: 'Time is required.' }
 
-  const eventDate = new Date(eventDateRaw)
-  if (isNaN(eventDate.getTime())) return { status: 'error', message: 'Invalid date.' }
+  const eventDate = combineDateTime(eventDateRaw, eventTimeRaw)
+  if (!eventDate) return { status: 'error', message: 'Invalid date or time.' }
 
   await db.event.create({ data: { title, eventDate, description } })
 
@@ -37,13 +45,15 @@ export async function updateEventAction(
 ) {
   const title        = (formData.get('title')       as string).trim()
   const eventDateRaw =  formData.get('eventDate')   as string
+  const eventTimeRaw =  formData.get('eventTime')   as string
   const description  = (formData.get('description') as string | null)?.trim() || null
 
   if (!title)        return { status: 'error', message: 'Title is required.' }
-  if (!eventDateRaw) return { status: 'error', message: 'Event date is required.' }
+  if (!eventDateRaw) return { status: 'error', message: 'Date is required.' }
+  if (!eventTimeRaw) return { status: 'error', message: 'Time is required.' }
 
-  const eventDate = new Date(eventDateRaw)
-  if (isNaN(eventDate.getTime())) return { status: 'error', message: 'Invalid date.' }
+  const eventDate = combineDateTime(eventDateRaw, eventTimeRaw)
+  if (!eventDate) return { status: 'error', message: 'Invalid date or time.' }
 
   await db.event.update({ where: { id }, data: { title, eventDate, description } })
 

@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
+import { EventCalendar } from './EventCalendar'
 import { CreateEventForm } from './CreateEventForm'
 import { EventItem } from './EditEventRow'
 
@@ -19,7 +20,7 @@ export default async function EventsPage() {
     },
   })
 
-  const now = new Date()
+  const now      = new Date()
   const upcoming = events.filter((e) => new Date(e.eventDate) >= now)
   const past     = events.filter((e) => new Date(e.eventDate) <  now).reverse()
 
@@ -27,15 +28,20 @@ export default async function EventsPage() {
     <div className="max-w-3xl mx-auto space-y-6">
       <h1 className="text-2xl font-bold text-brand-brown-dark">Events</h1>
 
+      {/* Calendar */}
+      <EventCalendar events={events} />
+
       {/* Create form */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-        <h2 className="font-semibold text-gray-800 mb-4">Create event</h2>
+        <h2 className="font-semibold text-gray-800 mb-4">Create New Event</h2>
         <CreateEventForm />
       </div>
 
       {/* Upcoming */}
       <section>
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Upcoming</h2>
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+          Upcoming Events ({upcoming.length})
+        </h2>
         {upcoming.length === 0 ? (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center">
             <p className="text-gray-400 text-sm">No upcoming events.</p>
