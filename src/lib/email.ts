@@ -10,6 +10,7 @@ function brevoHeaders() {
 const SENDER = { name: 'Nihanvi School of Dance', email: 'aneeshparasa@gmail.com' }
 
 async function sendEmail(to: string, subject: string, html: string): Promise<void> {
+  console.log('[email] sending to:', to, '| API key set:', !!process.env.BREVO_API_KEY)
   const res = await fetch(BREVO_API_URL, {
     method: 'POST',
     headers: brevoHeaders(),
@@ -20,8 +21,9 @@ async function sendEmail(to: string, subject: string, html: string): Promise<voi
       htmlContent: html,
     }),
   })
+  const body = await res.text()
+  console.log('[email] Brevo response:', res.status, body)
   if (!res.ok) {
-    const body = await res.text()
     throw new Error(`Brevo error ${res.status}: ${body}`)
   }
 }
