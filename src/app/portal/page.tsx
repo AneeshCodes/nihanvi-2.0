@@ -10,8 +10,20 @@ export default async function PortalPage() {
 
   const userId = session.user?.id
 
+  const userRecord = await db.user.findUnique({
+    where: { id: userId },
+    select: { levelGroup: true },
+  })
+  const level = userRecord?.levelGroup ?? null
+
   const [announcements, events, homeworkItems] = await Promise.all([
     db.announcement.findMany({
+      where: {
+        OR: [
+          { targetLevel: null },
+          ...(level ? [{ targetLevel: level }] : []),
+        ],
+      },
       orderBy: { postedAt: 'desc' },
       take: 3,
     }),
@@ -22,8 +34,10 @@ export default async function PortalPage() {
     }),
     db.homework.findMany({
       where: {
+        archived: false,
         OR: [
           { targetType: 'ALL' },
+          ...(level ? [{ targetType: 'LEVEL' as const, targetLevel: level }] : []),
           { targetType: 'STUDENT', targetStudentId: userId },
         ],
         dueDate: { gte: new Date() },

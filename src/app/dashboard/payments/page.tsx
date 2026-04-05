@@ -3,18 +3,7 @@ import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { RecordPaymentForm } from './RecordPaymentForm'
-
-const statusStyles: Record<string, string> = {
-  PAID:    'bg-green-50 text-green-700',
-  PENDING: 'bg-yellow-50 text-yellow-700',
-  OVERDUE: 'bg-red-50 text-brand-red',
-}
-
-const methodLabel: Record<string, string> = {
-  ZELLE: 'Zelle',
-  CASH:  'Cash',
-  OTHER: 'Other',
-}
+import { PaymentItem } from './EditPaymentRow'
 
 export default async function PaymentsPage() {
   const session = await getServerSession(authOptions)
@@ -65,27 +54,19 @@ export default async function PaymentsPage() {
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           <ul className="divide-y divide-gray-50">
             {payments.map((p) => (
-              <li key={p.id} className="px-5 py-4 flex items-center gap-3">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-medium text-sm text-gray-800">{p.student.name}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusStyles[p.status]}`}>
-                      {p.status.charAt(0) + p.status.slice(1).toLowerCase()}
-                    </span>
-                    {p.method && (
-                      <span className="text-xs text-gray-400">{methodLabel[p.method]}</span>
-                    )}
-                  </div>
-                  <div className="text-xs text-gray-400 mt-0.5">
-                    Due {new Date(p.dueDate).toLocaleDateString()}
-                    {p.paidDate && ` · Paid ${new Date(p.paidDate).toLocaleDateString()}`}
-                    {p.notes && ` · ${p.notes}`}
-                  </div>
-                </div>
-                <div className="text-sm font-bold text-gray-800 shrink-0">
-                  ${(p.amount / 100).toFixed(2)}
-                </div>
-              </li>
+              <PaymentItem
+                key={p.id}
+                payment={{
+                  id:          p.id,
+                  amount:      p.amount,
+                  status:      p.status,
+                  method:      p.method,
+                  dueDate:     p.dueDate,
+                  paidDate:    p.paidDate,
+                  notes:       p.notes,
+                  studentName: p.student.name,
+                }}
+              />
             ))}
           </ul>
         </div>

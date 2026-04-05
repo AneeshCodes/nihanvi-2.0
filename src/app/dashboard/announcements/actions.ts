@@ -24,3 +24,20 @@ export async function deleteAnnouncementAction(id: string) {
   revalidatePath('/dashboard/announcements')
   revalidatePath('/portal/announcements')
 }
+
+export async function updateAnnouncementAction(
+  id: string,
+  _prev: { status: string; message: string } | null,
+  formData: FormData
+) {
+  const body        = (formData.get('body')        as string).trim()
+  const targetLevel = (formData.get('targetLevel') as string | null)?.trim() || null
+
+  if (!body) return { status: 'error', message: 'Announcement text is required.' }
+
+  await db.announcement.update({ where: { id }, data: { body, targetLevel } })
+
+  revalidatePath('/dashboard/announcements')
+  revalidatePath('/portal/announcements')
+  return { status: 'success', message: 'Announcement updated.' }
+}

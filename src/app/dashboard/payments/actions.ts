@@ -46,3 +46,39 @@ export async function recordPaymentAction(
   revalidatePath('/dashboard/payments')
   return { status: 'success', message: 'Payment recorded.' }
 }
+
+export async function updatePaymentAction(
+  id: string,
+  _prev: { status: string; message: string } | null,
+  formData: FormData
+) {
+  const amountRaw   = (formData.get('amount')   as string).trim()
+  const status      = formData.get('status')    as string
+  const method      = (formData.get('method')   as string | null) || null
+  const paidDateRaw = (formData.get('paidDate') as string | null) || null
+  const notes       = (formData.get('notes')    as string | null)?.trim() || null
+
+  if (!amountRaw) return { status: 'error', message: 'Amount is required.' }
+  if (!['PENDING', 'PAID', 'OVERDUE'].includes(status)) {
+    return { status: 'error', message: 'Invalid status.' }
+  }
+
+  const amountDollars = parseFloat(amountRaw)
+  if (isNaN(amountDollars) || amountDollars <= 0) {
+    return { status: 'error', message: 'Amount must be a positive number.' }
+  }
+
+  await db.payment.update({
+    where: { id },
+    data: {
+      amount:   Math.round(amountDollars * 100),
+      status:   status as 'PENDING' | 'PAID' | 'OVERDUE',
+      method:   method as 'ZELLE' | 'CASH' | 'OTHER' | null,
+      paidDate: paidDateRaw ? new Date(paidDateRaw) : null,
+      notes,
+    },
+  })
+
+  revalidatePath('/dashboard/payments')
+  return { status: 'success', message: 'Payment updated.' }
+}
