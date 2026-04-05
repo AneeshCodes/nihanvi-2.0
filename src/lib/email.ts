@@ -1,12 +1,20 @@
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+function createTransport() {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD,
+    },
+  })
+}
 
-const FROM = `Nihanvi School of Dance <onboarding@resend.dev>`
+const FROM = `Nihanvi School of Dance <${process.env.GMAIL_USER}>`
 
 export async function sendPasswordResetEmail(to: string, resetUrl: string): Promise<void> {
-  resend.emails
-    .send({
+  createTransport()
+    .sendMail({
       from: FROM,
       to,
       subject: 'Reset your Nihanvi portal password',
@@ -22,8 +30,8 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string): Prom
 }
 
 export async function sendEnrollmentInviteEmail(to: string, enrollUrl: string): Promise<void> {
-  resend.emails
-    .send({
+  createTransport()
+    .sendMail({
       from: FROM,
       to,
       subject: "You're invited to Nihanvi School of Dance",
@@ -40,8 +48,8 @@ export async function sendEnrollmentInviteEmail(to: string, enrollUrl: string): 
 }
 
 export async function sendSetupPasswordEmail(to: string, studentName: string, setupUrl: string): Promise<void> {
-  resend.emails
-    .send({
+  createTransport()
+    .sendMail({
       from: FROM,
       to,
       subject: 'Set up your Nihanvi portal password',
