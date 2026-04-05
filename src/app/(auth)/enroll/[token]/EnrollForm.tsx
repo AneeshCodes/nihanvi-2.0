@@ -25,15 +25,15 @@ const selectClass = "border border-gray-200 rounded-lg px-3 py-3 text-sm focus:o
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December']
 
 const COUNTRY_CODES = [
-  { code: '+1',   label: '🇺🇸 +1 (US/CA)' },
-  { code: '+44',  label: '🇬🇧 +44 (UK)' },
-  { code: '+91',  label: '🇮🇳 +91 (India)' },
-  { code: '+61',  label: '🇦🇺 +61 (Australia)' },
-  { code: '+971', label: '🇦🇪 +971 (UAE)' },
-  { code: '+65',  label: '🇸🇬 +65 (Singapore)' },
-  { code: '+60',  label: '🇲🇾 +60 (Malaysia)' },
-  { code: '+64',  label: '🇳🇿 +64 (NZ)' },
-  { code: '+353', label: '🇮🇪 +353 (Ireland)' },
+  { code: '+1',   label: '🇺🇸 +1' },
+  { code: '+44',  label: '🇬🇧 +44' },
+  { code: '+91',  label: '🇮🇳 +91' },
+  { code: '+61',  label: '🇦🇺 +61' },
+  { code: '+971', label: '🇦🇪 +971' },
+  { code: '+65',  label: '🇸🇬 +65' },
+  { code: '+60',  label: '🇲🇾 +60' },
+  { code: '+64',  label: '🇳🇿 +64' },
+  { code: '+353', label: '🇮🇪 +353' },
 ]
 
 function formatUSPhone(digits: string): string {
@@ -97,6 +97,7 @@ function PhoneInput({ name, id, required }: { name: string; id: string; required
         onChange={e => handleChange(e.target.value)}
         placeholder={countryCode === '+1' ? '(813) 555-0100' : 'Phone number'}
         required={required}
+        autoComplete="off"
         className={`${inputClass} flex-1`}
       />
       <input type="hidden" name={name} value={fullNumber} />

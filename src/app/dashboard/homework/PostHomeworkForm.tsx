@@ -3,6 +3,7 @@
 import { useFormState } from 'react-dom'
 import { postHomeworkAction } from './actions'
 import { SubmitButton } from '@/components/forms/SubmitButton'
+import { LEVELS } from '@/lib/levels'
 
 type Student = { id: string; name: string }
 
@@ -33,12 +34,13 @@ export function PostHomeworkForm({ students }: { students: Student[] }) {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Level group <span className="text-gray-400">(if targeting by level)</span></label>
-        <input
+        <select
           name="targetLevel"
-          type="text"
-          placeholder="e.g. Beginner"
           className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
-        />
+        >
+          <option value="">— select level —</option>
+          {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
+        </select>
       </div>
 
       <div>

@@ -3,6 +3,7 @@
 import { useFormState } from 'react-dom'
 import { postAnnouncementAction } from './actions'
 import { SubmitButton } from '@/components/forms/SubmitButton'
+import { LEVELS } from '@/lib/levels'
 
 export function PostAnnouncementForm() {
   const [state, action] = useFormState(postAnnouncementAction, null)
@@ -33,12 +34,13 @@ export function PostAnnouncementForm() {
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Target level <span className="text-gray-400">(leave blank to send to everyone)</span>
         </label>
-        <input
+        <select
           name="targetLevel"
-          type="text"
-          placeholder="e.g. Beginner"
           className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
-        />
+        >
+          <option value="">— everyone —</option>
+          {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
+        </select>
       </div>
 
       <SubmitButton label="Post Announcement" pendingLabel="Posting..." />

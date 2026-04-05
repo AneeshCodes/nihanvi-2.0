@@ -2,6 +2,7 @@
 
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { createToken } from '@/lib/tokens'
@@ -16,7 +17,7 @@ export async function resendSetupLinkAction(userId: string) {
 
   const token    = await createToken(userId, 'SETUP', 72)
   const setupUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/setup-password/${token}`
-  sendSetupPasswordEmail(user.email, user.name, setupUrl)
+  await sendSetupPasswordEmail(user.email, user.name, setupUrl)
 }
 
 export async function updateLevelGroupAction(userId: string, levelGroup: string) {
@@ -27,4 +28,18 @@ export async function updateLevelGroupAction(userId: string, levelGroup: string)
     where: { id: userId },
     data: { levelGroup: levelGroup.trim() || null },
   })
+  revalidatePath('/dashboard/students')
+  revalidatePath(`/dashboard/students/${userId}`)
+}
+
+export async function unenrollStudentAction(userId: string) {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user?.role !== 'TEACHER') redirect('/login')
+
+  await db.user.update({
+    where: { id: userId },
+    data: { active: false },
+  })
+  revalidatePath('/dashboard/students')
+  redirect('/dashboard/students')
 }

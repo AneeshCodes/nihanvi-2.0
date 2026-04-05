@@ -98,7 +98,7 @@ export async function enrollAction(
   // Send setup password email
   const setupToken  = await createToken(user.id, 'SETUP', 72)
   const setupUrl    = `${process.env.NEXT_PUBLIC_SITE_URL}/setup-password/${setupToken}`
-  sendSetupPasswordEmail(email, studentName, setupUrl)
+  await sendSetupPasswordEmail(email, studentName, setupUrl)
 
   redirect('/enroll/success')
 }

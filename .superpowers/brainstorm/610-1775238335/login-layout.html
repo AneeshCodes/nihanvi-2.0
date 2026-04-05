@@ -1,0 +1,218 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lobster+Two:wght@400;700&display=swap');
+
+  .preview-wrap {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .phone-frame {
+    width: 320px;
+    min-height: 580px;
+    border-radius: 32px;
+    overflow: hidden;
+    border: 3px solid #e5e7eb;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  /* === OPTION A === */
+  .login-a {
+    background: #FFF8F0;
+    min-height: 580px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    font-family: 'Inter', sans-serif;
+  }
+  .login-a .logo {
+    font-family: 'Lobster Two', cursive;
+    font-size: 28px;
+    color: #3d1a00;
+    text-align: center;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .login-a .tagline {
+    font-size: 13px;
+    color: #9ca3af;
+    text-align: center;
+    margin-bottom: 28px;
+    letter-spacing: 0.02em;
+  }
+  .login-a .card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    padding: 24px;
+    width: 100%;
+  }
+  .login-a .field-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 6px;
+  }
+  .login-a .field {
+    width: 100%;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: #6b7280;
+    background: white;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+  }
+  .login-a .btn {
+    width: 100%;
+    background: #E8820C;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    margin-top: 4px;
+    cursor: pointer;
+  }
+  .login-a .forgot {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 13px;
+    color: #E8820C;
+  }
+
+  /* === OPTION B === */
+  .login-b {
+    background: #FFF8F0;
+    min-height: 580px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Inter', sans-serif;
+  }
+  .login-b .header-band {
+    background: #3d1a00;
+    padding: 36px 24px 40px;
+    text-align: center;
+  }
+  .login-b .header-band .logo {
+    font-family: 'Lobster Two', cursive;
+    font-size: 26px;
+    color: #FFF8F0;
+    line-height: 1.2;
+  }
+  .login-b .header-band .tagline {
+    font-size: 12px;
+    color: #d97706;
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .login-b .card-float {
+    background: white;
+    border-radius: 20px 20px 0 0;
+    margin-top: -18px;
+    flex: 1;
+    padding: 28px 24px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+  }
+  .login-b .card-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #3d1a00;
+    margin-bottom: 20px;
+  }
+  .login-b .field-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 6px;
+  }
+  .login-b .field {
+    width: 100%;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: #6b7280;
+    background: white;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+  }
+  .login-b .btn {
+    width: 100%;
+    background: #E8820C;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    margin-top: 4px;
+    cursor: pointer;
+  }
+  .login-b .forgot {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 13px;
+    color: #E8820C;
+  }
+</style>
+
+<h2>Login Page Layout</h2>
+<p class="subtitle">Both use the brand design system. Which direction feels right for Nihanvi?</p>
+
+<div class="preview-wrap">
+
+  <div>
+    <p class="label" style="margin-bottom:10px;">Option A — Minimal centered</p>
+    <div class="phone-frame option" data-choice="a" onclick="toggleSelect(this)">
+      <div class="login-a">
+        <div class="logo">Nihanvi<br>School of Dance</div>
+        <div class="tagline">Teacher & Student Portal</div>
+        <div class="card">
+          <div class="field-label">Email address</div>
+          <div class="field">you@example.com</div>
+          <div class="field-label">Password</div>
+          <div class="field">••••••••</div>
+          <button class="btn">Sign In</button>
+          <div class="forgot">Forgot password?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <p class="label" style="margin-bottom:10px;">Option B — Header band + floating card</p>
+    <div class="phone-frame option" data-choice="b" onclick="toggleSelect(this)">
+      <div class="login-b">
+        <div class="header-band">
+          <div class="logo">Nihanvi<br>School of Dance</div>
+          <div class="tagline">Kuchipudi Dance</div>
+        </div>
+        <div class="card-float">
+          <div class="card-title">Welcome back</div>
+          <div class="field-label">Email address</div>
+          <div class="field">you@example.com</div>
+          <div class="field-label">Password</div>
+          <div class="field">••••••••</div>
+          <button class="btn">Sign In</button>
+          <div class="forgot">Forgot password?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

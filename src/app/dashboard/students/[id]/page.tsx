@@ -6,6 +6,7 @@ import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { ResendSetupButton } from './ResendSetupButton'
 import { LevelGroupForm } from './LevelGroupForm'
+import { unenrollStudentAction } from './actions'
 
 function formatDate(d: Date) {
   return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -119,6 +120,25 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
               </div>
             </div>
           </dl>
+        </div>
+      )}
+
+      {/* Unenroll */}
+      {student.active && (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+          <h2 className="font-semibold text-gray-800 mb-1">Unenroll student</h2>
+          <p className="text-sm text-gray-500 mb-4">
+            This will deactivate the student&apos;s account. Their data is preserved and can be reactivated later.
+          </p>
+          <form action={unenrollStudentAction.bind(null, student.id)}>
+            <button
+              type="submit"
+              className="w-full border-2 border-brand-red text-brand-red font-bold py-3 rounded-lg text-sm
+                         hover:bg-red-50 transition-colors min-h-[44px]"
+            >
+              Unenroll {student.name}
+            </button>
+          </form>
         </div>
       )}
 

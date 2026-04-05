@@ -58,7 +58,7 @@ export async function sendEnrollmentInviteEmail(to: string, enrollUrl: string): 
 }
 
 export async function sendSetupPasswordEmail(to: string, studentName: string, setupUrl: string): Promise<void> {
-  sendEmail(
+  await sendEmail(
     to,
     'Set up your Nihanvi portal password',
     `
@@ -68,5 +68,5 @@ export async function sendSetupPasswordEmail(to: string, studentName: string, se
       <p>This link expires in 72 hours.</p>
       <p>— Nihanvi School of Dance</p>
     `
-  ).catch(console.error)
+  )
 }

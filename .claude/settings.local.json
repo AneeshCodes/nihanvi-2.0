@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"c:\\\\Aneesh\\\\Development\\\\Websites\\\\Nihanvi School Of Dance\\\\Website 2.0/src/components/layout\")",
+      "Bash(mkdir -p \"c:\\\\Aneesh\\\\Development\\\\Websites\\\\Nihanvi School Of Dance\\\\Website 2.0/src/app/portal\")",
+      "Bash(npx tsc:*)",
+      "Bash(npm test:*)"
+    ]
+  }
+}

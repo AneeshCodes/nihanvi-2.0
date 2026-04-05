@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { updateLevelGroupAction } from './actions'
+import { LEVELS } from '@/lib/levels'
 
 export function LevelGroupForm({ userId, current }: { userId: string; current: string }) {
   const [value,  setValue]  = useState(current)
@@ -17,15 +18,16 @@ export function LevelGroupForm({ userId, current }: { userId: string; current: s
   }
 
   return (
-    <div className="flex gap-3 items-start">
-      <input
-        type="text"
+    <div className="flex gap-3 items-center">
+      <select
         value={value}
         onChange={e => { setValue(e.target.value); setSaved(false) }}
-        placeholder="e.g. Beginner, Intermediate"
         className="flex-1 border border-gray-200 rounded-lg px-4 py-3 text-sm
-                   focus:outline-none focus:ring-2 focus:ring-brand-orange bg-white"
-      />
+                   focus:outline-none focus:border-brand-orange bg-white"
+      >
+        <option value="">— not assigned —</option>
+        {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
+      </select>
       <button
         onClick={handleSave}
         disabled={saving}
