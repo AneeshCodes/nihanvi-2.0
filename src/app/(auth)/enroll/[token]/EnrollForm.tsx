@@ -1,6 +1,7 @@
 'use client'
 
 import { useFormState } from 'react-dom'
+import { useState } from 'react'
 import { enrollAction } from './actions'
 import { SubmitButton } from '@/components/forms/SubmitButton'
 
@@ -18,10 +19,164 @@ function Label({ htmlFor, children, required }: { htmlFor: string; children: Rea
   )
 }
 
-const inputClass = "w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange bg-white"
+const inputClass = "w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+const selectClass = "border border-gray-200 rounded-lg px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December']
+
+const COUNTRY_CODES = [
+  { code: '+1',   label: '🇺🇸 +1 (US/CA)' },
+  { code: '+44',  label: '🇬🇧 +44 (UK)' },
+  { code: '+91',  label: '🇮🇳 +91 (India)' },
+  { code: '+61',  label: '🇦🇺 +61 (Australia)' },
+  { code: '+971', label: '🇦🇪 +971 (UAE)' },
+  { code: '+65',  label: '🇸🇬 +65 (Singapore)' },
+  { code: '+60',  label: '🇲🇾 +60 (Malaysia)' },
+  { code: '+64',  label: '🇳🇿 +64 (NZ)' },
+  { code: '+353', label: '🇮🇪 +353 (Ireland)' },
+]
+
+function formatUSPhone(digits: string): string {
+  const d = digits.replace(/\D/g, '').slice(0, 10)
+  if (d.length <= 3) return d
+  if (d.length <= 6) return `(${d.slice(0,3)}) ${d.slice(3)}`
+  return `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`
+}
+
+function computeAge(year: string, month: string, day: string): number | null {
+  if (!year || !month || !day) return null
+  const dob = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+  const today = new Date()
+  let age = today.getFullYear() - dob.getFullYear()
+  const m = today.getMonth() - dob.getMonth()
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--
+  return age
+}
+
+function daysInMonth(month: string, year: string): number {
+  if (!month) return 31
+  return new Date(parseInt(year) || 2000, parseInt(month), 0).getDate()
+}
+
+function PhoneInput({ name, id, required }: { name: string; id: string; required?: boolean }) {
+  const [countryCode, setCountryCode] = useState('+1')
+  const [display, setDisplay] = useState('')
+
+  function handleChange(raw: string) {
+    if (countryCode === '+1') {
+      setDisplay(formatUSPhone(raw))
+    } else {
+      setDisplay(raw.replace(/[^\d\s\-+()]/g, ''))
+    }
+  }
+
+  function handleCodeChange(code: string) {
+    setCountryCode(code)
+    setDisplay('')
+  }
+
+  const digits = display.replace(/\D/g, '')
+  const fullNumber = `${countryCode}${digits}`
+
+  return (
+    <div className="flex gap-2">
+      <select
+        value={countryCode}
+        onChange={e => handleCodeChange(e.target.value)}
+        className={`${selectClass} shrink-0 w-44`}
+        aria-label="Country code"
+      >
+        {COUNTRY_CODES.map(c => (
+          <option key={c.code} value={c.code}>{c.label}</option>
+        ))}
+      </select>
+      <input
+        id={id}
+        type="tel"
+        value={display}
+        onChange={e => handleChange(e.target.value)}
+        placeholder={countryCode === '+1' ? '(813) 555-0100' : 'Phone number'}
+        required={required}
+        className={`${inputClass} flex-1`}
+      />
+      <input type="hidden" name={name} value={fullNumber} />
+    </div>
+  )
+}
+
+function DOBPicker({ onAgeChange }: { onAgeChange: (age: number | null) => void }) {
+  const currentYear = new Date().getFullYear()
+  const years = Array.from({ length: currentYear - 1929 }, (_, i) => currentYear - i)
+
+  const [month, setMonth] = useState('')
+  const [day,   setDay]   = useState('')
+  const [year,  setYear]  = useState('')
+
+  function update(m: string, d: string, y: string) {
+    setMonth(m); setDay(d); setYear(y)
+    onAgeChange(computeAge(y, m, d))
+  }
+
+  const maxDay = daysInMonth(month, year)
+  const days = Array.from({ length: maxDay }, (_, i) => i + 1)
+  const dobValue = year && month && day
+    ? `${year}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`
+    : ''
+
+  return (
+    <div>
+      <div className="grid grid-cols-3 gap-2">
+        {/* Month */}
+        <select
+          value={month}
+          onChange={e => update(e.target.value, day, year)}
+          className={`${selectClass} w-full`}
+          aria-label="Birth month"
+        >
+          <option value="">Month</option>
+          {MONTHS.map((m, i) => (
+            <option key={m} value={String(i + 1)}>{m}</option>
+          ))}
+        </select>
+
+        {/* Day */}
+        <select
+          value={day}
+          onChange={e => update(month, e.target.value, year)}
+          className={`${selectClass} w-full`}
+          aria-label="Birth day"
+        >
+          <option value="">Day</option>
+          {days.map(d => (
+            <option key={d} value={String(d)}>{d}</option>
+          ))}
+        </select>
+
+        {/* Year */}
+        <select
+          value={year}
+          onChange={e => update(month, day, e.target.value)}
+          className={`${selectClass} w-full`}
+          aria-label="Birth year"
+        >
+          <option value="">Year</option>
+          {years.map(y => (
+            <option key={y} value={String(y)}>{y}</option>
+          ))}
+        </select>
+      </div>
+      <input type="hidden" name="dateOfBirth" value={dobValue} />
+    </div>
+  )
+}
 
 export function EnrollForm({ token, prefillEmail }: { token: string; prefillEmail: string }) {
   const [state, action] = useFormState(enrollAction, null)
+  const [isMinor, setIsMinor] = useState<boolean | null>(null)
+
+  function handleAgeChange(age: number | null) {
+    setIsMinor(age === null ? null : age < 18)
+  }
 
   return (
     <form action={action} noValidate className="space-y-5">
@@ -35,34 +190,83 @@ export function EnrollForm({ token, prefillEmail }: { token: string; prefillEmai
       </div>
 
       <div>
-        <Label htmlFor="dateOfBirth" required>Date of birth</Label>
-        <input id="dateOfBirth" name="dateOfBirth" type="date" required className={inputClass} />
+        <Label htmlFor="dob-month" required>Date of birth</Label>
+        <DOBPicker onAgeChange={handleAgeChange} />
         <FieldError state={state} field="dateOfBirth" />
       </div>
 
-      {/* Parent/guardian */}
-      <div>
-        <Label htmlFor="parentName" required>Parent / guardian name</Label>
-        <input id="parentName" name="parentName" type="text" autoComplete="name" required className={inputClass} />
-        <FieldError state={state} field="parentName" />
-      </div>
+      {/* Parent name — only if minor or not yet determined */}
+      {isMinor !== false && (
+        <div>
+          <Label htmlFor="parentName" required={isMinor === true}>
+            Parent / guardian name
+            {isMinor === null && <span className="text-gray-400 font-normal ml-1">(required if under 18)</span>}
+          </Label>
+          <input
+            id="parentName"
+            name="parentName"
+            type="text"
+            autoComplete="name"
+            required={isMinor === true}
+            className={inputClass}
+          />
+          <FieldError state={state} field="parentName" />
+        </div>
+      )}
 
+      {/* Phone numbers */}
       <div>
         <Label htmlFor="primaryPhone" required>Primary phone</Label>
-        <input id="primaryPhone" name="primaryPhone" type="tel" autoComplete="tel" required className={inputClass} />
+        <PhoneInput id="primaryPhone" name="primaryPhone" required />
         <FieldError state={state} field="primaryPhone" />
       </div>
 
       <div>
         <Label htmlFor="altPhone">Alternative phone</Label>
-        <input id="altPhone" name="altPhone" type="tel" autoComplete="tel" className={inputClass} />
+        <PhoneInput id="altPhone" name="altPhone" />
       </div>
 
-      <div>
-        <Label htmlFor="address" required>Home address</Label>
-        <input id="address" name="address" type="text" autoComplete="street-address" required className={inputClass} />
+      {/* Address */}
+      <fieldset className="space-y-3">
+        <legend className="block text-sm font-medium text-gray-700">
+          Home address <span className="text-brand-red" aria-hidden="true">*</span>
+        </legend>
+        <input
+          name="streetAddress"
+          type="text"
+          placeholder="Street address"
+          autoComplete="address-line1"
+          required
+          className={inputClass}
+        />
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            name="city"
+            type="text"
+            placeholder="City"
+            autoComplete="address-level2"
+            required
+            className={inputClass}
+          />
+          <input
+            name="state"
+            type="text"
+            placeholder="State"
+            autoComplete="address-level1"
+            required
+            className={inputClass}
+          />
+        </div>
+        <input
+          name="zip"
+          type="text"
+          placeholder="ZIP / Postal code"
+          autoComplete="postal-code"
+          required
+          className={`${inputClass} w-40`}
+        />
         <FieldError state={state} field="address" />
-      </div>
+      </fieldset>
 
       <div>
         <Label htmlFor="email" required>Email address</Label>
@@ -104,7 +308,6 @@ export function EnrollForm({ token, prefillEmail }: { token: string; prefillEmai
         <FieldError state={state} field="signature" />
       </div>
 
-      {/* Generic error */}
       {state?.status === 'error' && state.field === 'token' && (
         <p role="alert" className="text-sm text-brand-red text-center">{state.message}</p>
       )}

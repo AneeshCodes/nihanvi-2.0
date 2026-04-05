@@ -13,10 +13,14 @@ export async function enrollAction(
   const token          = formData.get('token')         as string
   const studentName    = (formData.get('studentName')  as string).trim()
   const dobRaw         = formData.get('dateOfBirth')   as string
-  const parentName     = (formData.get('parentName')   as string).trim()
+  const parentName     = (formData.get('parentName')   as string | null)?.trim() || null
   const primaryPhone   = (formData.get('primaryPhone') as string).trim()
   const altPhone       = (formData.get('altPhone')     as string | null)?.trim() || null
-  const address        = (formData.get('address')      as string).trim()
+  const streetAddress  = (formData.get('streetAddress') as string).trim()
+  const city           = (formData.get('city')          as string).trim()
+  const stateVal       = (formData.get('state')         as string).trim()
+  const zip            = (formData.get('zip')           as string).trim()
+  const address        = [streetAddress, city, stateVal, zip].filter(Boolean).join(', ')
   const email          = (formData.get('email')        as string).trim()
   const experience     = (formData.get('experience')   as string | null)?.trim() || null
   const certInt        = formData.get('certificationInterest') === 'on'
@@ -27,7 +31,19 @@ export async function enrollAction(
   // Validations
   if (!studentName) return { status: 'error', message: 'Student name is required.', field: 'studentName' }
   if (!dobRaw)      return { status: 'error', message: 'Date of birth is required.', field: 'dateOfBirth' }
-  if (!parentName)  return { status: 'error', message: 'Parent/guardian name is required.', field: 'parentName' }
+
+  // Validate DOB early so we can check age for parent name requirement
+  const dateOfBirthEarly = new Date(dobRaw)
+  if (isNaN(dateOfBirthEarly.getTime())) {
+    return { status: 'error', message: 'Invalid date of birth.', field: 'dateOfBirth' }
+  }
+  const ageMs  = Date.now() - dateOfBirthEarly.getTime()
+  const age    = Math.floor(ageMs / (1000 * 60 * 60 * 24 * 365.25))
+  const isMinor = age < 18
+
+  if (isMinor && !parentName) {
+    return { status: 'error', message: 'Parent/guardian name is required for students under 18.', field: 'parentName' }
+  }
   if (!primaryPhone) return { status: 'error', message: 'Phone number is required.', field: 'primaryPhone' }
   if (!address)     return { status: 'error', message: 'Address is required.', field: 'address' }
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -41,10 +57,7 @@ export async function enrollAction(
     return { status: 'error', message: 'This enrollment link has expired or already been used.', field: 'token' }
   }
 
-  const dateOfBirth = new Date(dobRaw)
-  if (isNaN(dateOfBirth.getTime())) {
-    return { status: 'error', message: 'Invalid date of birth.', field: 'dateOfBirth' }
-  }
+  const dateOfBirth = dateOfBirthEarly
 
   // Create User + update Registration in a transaction
   const user = await db.$transaction(async (tx) => {
@@ -64,7 +77,7 @@ export async function enrollAction(
       data: {
         studentName,
         dateOfBirth,
-        parentName,
+        parentName: parentName ?? '',
         primaryPhone,
         alternativePhone: altPhone,
         address,
