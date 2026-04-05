@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useFormState } from 'react-dom'
 import { postHomeworkAction } from './actions'
 import { SubmitButton } from '@/components/forms/SubmitButton'
@@ -8,7 +9,8 @@ import { LEVELS } from '@/lib/levels'
 type Student = { id: string; name: string }
 
 export function PostHomeworkForm({ students }: { students: Student[] }) {
-  const [state, action] = useFormState(postHomeworkAction, null)
+  const [state, action]     = useFormState(postHomeworkAction, null)
+  const [targetType, setTargetType] = useState('ALL')
 
   return (
     <form action={action} className="space-y-4">
@@ -23,7 +25,8 @@ export function PostHomeworkForm({ students }: { students: Student[] }) {
         <label className="block text-sm font-medium text-gray-700 mb-1">Assign to</label>
         <select
           name="targetType"
-          defaultValue="ALL"
+          value={targetType}
+          onChange={e => setTargetType(e.target.value)}
           className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
         >
           <option value="ALL">Everyone</option>
@@ -32,37 +35,44 @@ export function PostHomeworkForm({ students }: { students: Student[] }) {
         </select>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Level group <span className="text-gray-400">(if targeting by level)</span></label>
-        <select
-          name="targetLevel"
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
-        >
-          <option value="">— select level —</option>
-          {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
-        </select>
-      </div>
+      {targetType === 'LEVEL' && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Level group <span className="text-brand-red">*</span>
+          </label>
+          <select
+            name="targetLevel"
+            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+          >
+            <option value="">— select level —</option>
+            {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
+          </select>
+        </div>
+      )}
+
+      {targetType === 'STUDENT' && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Student <span className="text-brand-red">*</span>
+          </label>
+          <select
+            name="targetStudentId"
+            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+          >
+            <option value="">— select student —</option>
+            {students.map((s) => (
+              <option key={s.id} value={s.id}>{s.name}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Student <span className="text-gray-400">(if targeting specific student)</span></label>
-        <select
-          name="targetStudentId"
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
-        >
-          <option value="">— select student —</option>
-          {students.map((s) => (
-            <option key={s.id} value={s.id}>{s.name}</option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">YouTube URL <span className="text-brand-red">*</span></label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">YouTube URL</label>
         <input
           name="youtubeUrl"
           type="url"
           placeholder="https://youtube.com/..."
-          required
           className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
         />
       </div>
@@ -82,7 +92,7 @@ export function PostHomeworkForm({ students }: { students: Student[] }) {
         <input
           name="dueDate"
           type="date"
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white text-gray-700 [color-scheme:light]"
         />
       </div>
 

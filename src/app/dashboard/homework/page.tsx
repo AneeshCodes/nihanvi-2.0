@@ -3,7 +3,8 @@ import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { PostHomeworkForm } from './PostHomeworkForm'
-import { archiveHomeworkAction } from './actions'
+import { ArchiveButton } from './ArchiveButton'
+import { ArchivedSection } from './ArchivedSection'
 
 function targetLabel(hw: { targetType: string; targetLevel: string | null; targetStudent: { name: string } | null }) {
   if (hw.targetType === 'ALL')     return 'Everyone'
@@ -16,11 +17,16 @@ export default async function HomeworkPage() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/login')
 
-  const [homeworkList, students] = await Promise.all([
+  const [activeHW, archivedHW, students] = await Promise.all([
     db.homework.findMany({
       where: { archived: false },
       orderBy: { postedAt: 'desc' },
       include: { targetStudent: true, submissions: true },
+    }),
+    db.homework.findMany({
+      where: { archived: true },
+      orderBy: { postedAt: 'desc' },
+      include: { targetStudent: true },
     }),
     db.user.findMany({
       where: { role: 'STUDENT', active: true },
@@ -39,15 +45,15 @@ export default async function HomeworkPage() {
         <PostHomeworkForm students={students} />
       </div>
 
-      {/* List */}
-      {homeworkList.length === 0 ? (
+      {/* Active list */}
+      {activeHW.length === 0 ? (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center">
           <p className="text-gray-400 text-sm">No active assignments.</p>
         </div>
       ) : (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           <ul className="divide-y divide-gray-50">
-            {homeworkList.map((hw) => {
+            {activeHW.map((hw) => {
               const done = hw.submissions.filter((s) => s.markedDone).length
               return (
                 <li key={hw.id} className="px-5 py-4">
@@ -63,14 +69,18 @@ export default async function HomeworkPage() {
                           </span>
                         )}
                       </div>
-                      <a
-                        href={hw.youtubeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm font-medium text-brand-orange hover:underline truncate block"
-                      >
-                        {hw.youtubeUrl}
-                      </a>
+                      {hw.youtubeUrl ? (
+                        <a
+                          href={hw.youtubeUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-medium text-brand-orange hover:underline truncate block"
+                        >
+                          {hw.youtubeUrl}
+                        </a>
+                      ) : (
+                        <p className="text-sm text-gray-400 italic">No video link</p>
+                      )}
                       {hw.description && (
                         <p className="text-xs text-gray-500 mt-0.5">{hw.description}</p>
                       )}
@@ -78,14 +88,7 @@ export default async function HomeworkPage() {
                         {done} student{done !== 1 ? 's' : ''} marked done
                       </p>
                     </div>
-                    <form action={archiveHomeworkAction.bind(null, hw.id)}>
-                      <button
-                        type="submit"
-                        className="text-xs text-gray-400 hover:text-brand-red transition-colors whitespace-nowrap"
-                      >
-                        Archive
-                      </button>
-                    </form>
+                    <ArchiveButton id={hw.id} />
                   </div>
                 </li>
               )
@@ -93,6 +96,9 @@ export default async function HomeworkPage() {
           </ul>
         </div>
       )}
+
+      {/* Archived */}
+      <ArchivedSection items={archivedHW} />
     </div>
   )
 }

@@ -93,9 +93,13 @@ export default async function PortalHomeworkPage() {
         </section>
       )}
 
-      {done.length > 0 && (
-        <section>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Completed</h2>
+      <section>
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Completed</h2>
+        {done.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-center">
+            <p className="text-sm text-gray-400">Nothing completed yet — tap the checkmark when you&apos;re done with an assignment.</p>
+          </div>
+        ) : (
           <ul className="space-y-3">
             {done.map((h) => (
               <li key={h.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4 opacity-60">
@@ -128,8 +132,8 @@ export default async function PortalHomeworkPage() {
               </li>
             ))}
           </ul>
-        </section>
-      )}
+        )}
+      </section>
     </div>
   )
 }

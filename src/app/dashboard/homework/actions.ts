@@ -48,3 +48,8 @@ export async function archiveHomeworkAction(id: string) {
   await db.homework.update({ where: { id }, data: { archived: true } })
   revalidatePath('/dashboard/homework')
 }
+
+export async function unarchiveHomeworkAction(id: string) {
+  await db.homework.update({ where: { id }, data: { archived: false } })
+  revalidatePath('/dashboard/homework')
+}
