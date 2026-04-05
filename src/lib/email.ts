@@ -30,8 +30,9 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string): Prom
 }
 
 export async function sendEnrollmentInviteEmail(to: string, enrollUrl: string): Promise<void> {
-  createTransport()
-    .sendMail({
+  console.log('[email] attempting invite to:', to, '| GMAIL_USER set:', !!process.env.GMAIL_USER, '| PASS set:', !!process.env.GMAIL_APP_PASSWORD)
+  try {
+    const result = await createTransport().sendMail({
       from: FROM,
       to,
       subject: "You're invited to Nihanvi School of Dance",
@@ -44,7 +45,10 @@ export async function sendEnrollmentInviteEmail(to: string, enrollUrl: string): 
         <p>— Nihanvi School of Dance</p>
       `,
     })
-    .catch(console.error)
+    console.log('[email] invite sent successfully:', result.messageId)
+  } catch (err) {
+    console.error('[email] invite FAILED:', err)
+  }
 }
 
 export async function sendSetupPasswordEmail(to: string, studentName: string, setupUrl: string): Promise<void> {
