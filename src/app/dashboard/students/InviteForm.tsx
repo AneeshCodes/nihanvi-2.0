@@ -27,10 +27,26 @@ export function InviteForm() {
       <SubmitButton label="Send Invite" pendingLabel="Sending…" />
 
       {state?.status === 'error' && (
-        <p role="alert" className="mt-2 text-sm text-brand-red">{state.message}</p>
+        <p role="alert" className="text-sm text-brand-red">{state.message}</p>
       )}
       {state?.status === 'success' && (
-        <p role="status" className="mt-2 text-sm text-green-600">{state.message}</p>
+        <div className="space-y-2">
+          <p role="status" className="text-sm text-green-600">{state.message}</p>
+          {state.enrollUrl && (
+            <div className="bg-gray-50 rounded-lg p-3 space-y-1">
+              <p className="text-xs text-gray-500">
+                If the email doesn&apos;t arrive, share this link directly:
+              </p>
+              <input
+                readOnly
+                value={state.enrollUrl}
+                onClick={(e) => (e.target as HTMLInputElement).select()}
+                className="w-full text-xs text-brand-orange bg-white border border-gray-200 rounded px-3 py-2 cursor-pointer focus:outline-none"
+              />
+              <p className="text-xs text-gray-400">Tap to select, then copy</p>
+            </div>
+          )}
+        </div>
       )}
     </form>
   )

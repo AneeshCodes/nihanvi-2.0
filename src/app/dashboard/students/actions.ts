@@ -23,5 +23,5 @@ export async function inviteStudentAction(
   const enrollUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/enroll/${token}`
   sendEnrollmentInviteEmail(email, enrollUrl)
 
-  return { status: 'success', message: `Invitation sent to ${email}` }
+  return { status: 'success', message: `Invitation sent to ${email}`, enrollUrl }
 }
