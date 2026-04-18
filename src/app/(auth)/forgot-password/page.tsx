@@ -9,16 +9,16 @@ export default function ForgotPasswordPage() {
   const [state, action] = useFormState(forgotPasswordAction, null)
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-      <h2 className="text-xl font-bold text-brand-brown-dark mb-1">
-        Reset your password
-      </h2>
-      <p className="text-sm text-gray-500 mb-6">
-        Enter your email and we&apos;ll send you a reset link.
-      </p>
+    <div className="bg-white rounded-2xl shadow-xl shadow-brand-brown-dark/5 border border-orange-100 p-7">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-brand-brown-dark">Reset your password</h2>
+        <p className="text-sm text-gray-500 mt-0.5">
+          Enter your email and we&apos;ll send you a reset link.
+        </p>
+      </div>
 
-      <form action={action} noValidate>
-        <div className="mb-4">
+      <form action={action} noValidate className="space-y-4">
+        <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
             Email address
           </label>
@@ -28,8 +28,8 @@ export default function ForgotPasswordPage() {
             type="email"
             autoComplete="email"
             required
-            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm
-                       focus:outline-none focus:ring-2 focus:ring-brand-orange bg-white"
+            placeholder="you@example.com"
+            className="input-base"
           />
           {state?.status === 'error' && (
             <p role="alert" className="mt-2 text-sm text-brand-red flex items-center gap-1.5">
@@ -41,11 +41,16 @@ export default function ForgotPasswordPage() {
           )}
         </div>
 
-        <SubmitButton label="Send reset link" pendingLabel="Sending…" />
+        <div className="pt-1">
+          <SubmitButton label="Send reset link" pendingLabel="Sending…" />
+        </div>
       </form>
 
-      <div className="text-center mt-4">
-        <Link href="/login" className="text-sm text-brand-orange hover:text-brand-brown-mid py-3 inline-flex items-center justify-center min-h-[44px]">
+      <div className="text-center mt-5">
+        <Link href="/login" className="text-sm text-brand-orange hover:text-brand-brown-mid transition-colors py-2 inline-flex items-center gap-1.5">
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
           Back to sign in
         </Link>
       </div>
