@@ -51,7 +51,7 @@ export function AppShell({ navItems, userName, initials, children }: AppShellPro
   )
 
   const sidebar = (
-    <div className="flex flex-col h-full bg-white border-r border-gray-100">
+    <div className="flex flex-col h-full bg-[#FFF8F0] border-r border-orange-100">
       {/* Logo */}
       <div className="px-4 py-5 border-b border-gray-100">
         <div className="flex items-center gap-3">
@@ -72,7 +72,7 @@ export function AppShell({ navItems, userName, initials, children }: AppShellPro
       {nav}
 
       {/* User + sign out */}
-      <div className="px-3 py-3 border-t border-gray-100 bg-gray-50/50">
+      <div className="px-3 py-3 border-t border-orange-100/60 bg-[#FFF3E6]/40">
         <div className="flex items-center gap-3 px-2 py-2 mb-1 rounded-xl">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-orange to-brand-brown-mid flex items-center justify-center shrink-0 shadow-sm">
             <span className="text-white text-xs font-bold">{initials}</span>

@@ -26,24 +26,49 @@ export default async function EventsPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-brand-brown-dark">Events</h1>
+      {/* Page header */}
+      <div className="flex items-center gap-4">
+        <div className="w-11 h-11 rounded-2xl bg-purple-100 flex items-center justify-center shrink-0">
+          <svg className="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 9v7.5" />
+          </svg>
+        </div>
+        <div>
+          <h1 className="text-xl font-bold text-brand-brown-dark">Events</h1>
+          <p className="text-sm text-gray-400 mt-0.5">{upcoming.length} upcoming · {past.length} past</p>
+        </div>
+      </div>
 
       {/* Calendar */}
       <EventCalendar events={events} />
 
       {/* Create form */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-        <h2 className="font-semibold text-gray-800 mb-4">Create New Event</h2>
-        <CreateEventForm />
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-brand-orange" />
+          <h2 className="font-semibold text-gray-700 text-sm">Create new event</h2>
+        </div>
+        <div className="p-5">
+          <CreateEventForm />
+        </div>
       </div>
 
       {/* Upcoming */}
       <section>
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-          Upcoming Events ({upcoming.length})
-        </h2>
+        <div className="flex items-center gap-3 mb-3">
+          <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Upcoming</h2>
+          {upcoming.length > 0 && (
+            <span className="bg-purple-100 text-purple-700 text-xs font-bold px-2 py-0.5 rounded-full">{upcoming.length}</span>
+          )}
+          <div className="flex-1 h-px bg-gray-100" />
+        </div>
         {upcoming.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-10 text-center">
+            <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center mx-auto mb-3">
+              <svg className="w-6 h-6 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75" />
+              </svg>
+            </div>
             <p className="text-gray-400 text-sm">No upcoming events.</p>
           </div>
         ) : (
@@ -57,11 +82,14 @@ export default async function EventsPage() {
         )}
       </section>
 
-      {/* Past */}
       {past.length > 0 && (
         <section>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Past</h2>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-3 mb-3">
+            <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Past</h2>
+            <span className="text-xs text-gray-300">{past.length}</span>
+            <div className="flex-1 h-px bg-gray-100" />
+          </div>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden opacity-75">
             <ul className="divide-y divide-gray-50">
               {past.map((e) => (
                 <EventItem key={e.id} event={e} past />

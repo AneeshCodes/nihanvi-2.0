@@ -37,35 +37,66 @@ export default async function HomeworkPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-brand-brown-dark">Homework</h1>
+      {/* Page header */}
+      <div className="flex items-center gap-4">
+        <div className="w-11 h-11 rounded-2xl bg-amber-100 flex items-center justify-center shrink-0">
+          <svg className="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+          </svg>
+        </div>
+        <div>
+          <h1 className="text-xl font-bold text-brand-brown-dark">Homework</h1>
+          <p className="text-sm text-gray-400 mt-0.5">{activeHW.length} active assignment{activeHW.length !== 1 ? 's' : ''}</p>
+        </div>
+      </div>
 
       {/* Post form */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-        <h2 className="font-semibold text-gray-800 mb-4">Post new assignment</h2>
-        <PostHomeworkForm students={students} />
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-brand-orange" />
+          <h2 className="font-semibold text-gray-700 text-sm">Post new assignment</h2>
+        </div>
+        <div className="p-5">
+          <PostHomeworkForm students={students} />
+        </div>
       </div>
 
       {/* Active list */}
       {activeHW.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center">
-          <p className="text-gray-400 text-sm">No active assignments.</p>
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
+          <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center mx-auto mb-3">
+            <svg className="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+            </svg>
+          </div>
+          <p className="text-gray-400 text-sm font-medium">No active assignments</p>
+          <p className="text-gray-300 text-xs mt-1">Post one above to get started.</p>
         </div>
       ) : (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
+            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Active</span>
+            <span className="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">{activeHW.length}</span>
+          </div>
           <ul className="divide-y divide-gray-50">
             {activeHW.map((hw) => {
               const done = hw.submissions.filter((s) => s.markedDone).length
+              const total = students.length
+              const pct = total > 0 ? Math.round((done / total) * 100) : 0
               return (
-                <li key={hw.id} className="px-5 py-4">
+                <li key={hw.id} className="px-5 py-4 hover:bg-gray-50/50 transition-colors">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap items-center gap-2 mb-1">
-                        <span className="text-xs bg-orange-50 text-brand-orange px-2 py-0.5 rounded-full font-medium">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <span className="text-xs bg-orange-50 text-brand-orange border border-orange-100 px-2.5 py-0.5 rounded-full font-semibold">
                           {targetLabel(hw)}
                         </span>
                         {hw.dueDate && (
-                          <span className="text-xs text-gray-400">
-                            Due {new Date(hw.dueDate).toLocaleDateString()}
+                          <span className="flex items-center gap-1 text-xs text-gray-400">
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Due {new Date(hw.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                           </span>
                         )}
                       </div>
@@ -82,11 +113,18 @@ export default async function HomeworkPage() {
                         <p className="text-sm text-gray-400 italic">No video link</p>
                       )}
                       {hw.description && (
-                        <p className="text-xs text-gray-500 mt-0.5">{hw.description}</p>
+                        <p className="text-sm text-gray-600 mt-1 leading-relaxed">{hw.description}</p>
                       )}
-                      <p className="text-xs text-gray-400 mt-1">
-                        {done} student{done !== 1 ? 's' : ''} marked done
-                      </p>
+                      {/* Progress bar */}
+                      <div className="mt-2.5 flex items-center gap-2">
+                        <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-green-400 rounded-full transition-all"
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                        <span className="text-xs text-gray-400 shrink-0">{done}/{total} done</span>
+                      </div>
                     </div>
                     <ArchiveButton id={hw.id} />
                   </div>
@@ -97,7 +135,6 @@ export default async function HomeworkPage() {
         </div>
       )}
 
-      {/* Archived */}
       <ArchivedSection items={archivedHW} />
     </div>
   )
