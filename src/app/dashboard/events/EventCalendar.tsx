@@ -57,6 +57,7 @@ export function EventCalendar({ events }: { events: CalEvent[] }) {
         <button
           type="button"
           onClick={prev}
+          aria-label="Previous month"
           className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors text-gray-500 text-lg"
         >
           ‹
@@ -65,6 +66,7 @@ export function EventCalendar({ events }: { events: CalEvent[] }) {
         <button
           type="button"
           onClick={next}
+          aria-label="Next month"
           className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors text-gray-500 text-lg"
         >
           ›

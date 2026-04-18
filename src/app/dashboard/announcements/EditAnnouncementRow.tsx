@@ -30,7 +30,7 @@ export function AnnouncementItem({ announcement: a }: { announcement: Announceme
           )}
           <p className="text-sm text-gray-800 whitespace-pre-wrap">{a.body}</p>
           <p className="text-xs text-gray-400 mt-1">
-            {new Date(a.postedAt).toLocaleString()}
+            {new Date(a.postedAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
           </p>
         </div>
         <div className="flex items-center gap-3 shrink-0">

@@ -232,3 +232,13 @@ Running log of work done in this project. Appended after every request.
 - Created `src/app/portal/page.tsx` (server, 3 preview sections: announcements, events, homework)
 - Schema divergences from task spec adapted: `Announcement.body`/`postedAt` (no title/createdAt), `Event.eventDate` (no date/location), `Homework.targetType`/`targetStudentId` (not target/targetUserId)
 - `npx tsc --noEmit` passed with zero errors; 13/13 tests pass; commit 294e223
+
+### 2026-04-18 — Polish pass across dashboard and portal
+- Fixed raw uppercase payment status labels in `StudentDetailPage` (PAID → Paid, etc.) and added null guard on `p.method`
+- Fixed `EditAnnouncementRow` using `toLocaleString()` (showed date+time) → explicit `toLocaleDateString('en-US', {...})` options
+- Fixed `portal/page.tsx` announcement date using `toLocaleDateString()` with no options → explicit `en-US` options for consistent output
+- Added `aria-expanded` + `aria-controls="mobile-sidebar"` to mobile menu toggle in `AppShell`; added `id="mobile-sidebar"` on drawer
+- Added `aria-label="Previous month"` / `"Next month"` to calendar nav buttons in `EventCalendar`
+- Fixed portal homework `<a href={h.youtubeUrl}>` rendering `href="null"` when URL is absent — now conditionally renders fallback text
+- Added `hover:bg-brand-orange/20` to completed homework "mark undone" checkmark button (was missing hover state)
+- `npx tsc --noEmit` zero errors

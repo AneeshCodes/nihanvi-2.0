@@ -71,7 +71,7 @@ export default async function PortalPage() {
               <li key={a.id} className="px-5 py-4">
                 <div className="text-sm text-gray-800 line-clamp-2">{a.body}</div>
                 <div className="text-xs text-gray-400 mt-0.5">
-                  {new Date(a.postedAt).toLocaleDateString()}
+                  {new Date(a.postedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                 </div>
               </li>
             ))}

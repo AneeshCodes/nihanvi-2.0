@@ -86,7 +86,7 @@ export function AppShell({ navItems, userName, initials, children }: AppShellPro
       )}
 
       {/* Mobile sidebar drawer */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-60 flex flex-col lg:hidden transform transition-transform duration-200
+      <div id="mobile-sidebar" className={`fixed inset-y-0 left-0 z-50 w-60 flex flex-col lg:hidden transform transition-transform duration-200
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         {sidebar}
       </div>
@@ -97,6 +97,8 @@ export function AppShell({ navItems, userName, initials, children }: AppShellPro
           onClick={() => setSidebarOpen(true)}
           className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
           aria-label="Open menu"
+          aria-expanded={sidebarOpen}
+          aria-controls="mobile-sidebar"
         >
           <svg className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />

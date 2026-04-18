@@ -176,7 +176,7 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
               <li key={p.id} className="flex items-center justify-between py-3 text-sm">
                 <div>
                   <span className="font-medium text-gray-800">{formatCents(p.amount)}</span>
-                  <span className="text-gray-400 ml-2">{p.method}</span>
+                  {p.method && <span className="text-gray-400 ml-2">{p.method.charAt(0) + p.method.slice(1).toLowerCase()}</span>}
                   {p.notes && <span className="text-gray-400 ml-2">· {p.notes}</span>}
                 </div>
                 <span className={`text-xs px-2 py-1 rounded-full font-medium ${
@@ -184,7 +184,7 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                   p.status === 'OVERDUE' ? 'bg-red-100 text-brand-red' :
                   'bg-yellow-100 text-yellow-700'
                 }`}>
-                  {p.status}
+                  {p.status.charAt(0) + p.status.slice(1).toLowerCase()}
                 </span>
               </li>
             ))}

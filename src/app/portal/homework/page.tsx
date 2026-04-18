@@ -58,14 +58,18 @@ export default async function PortalHomeworkPage() {
               <li key={h.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
-                    <a
-                      href={h.youtubeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm font-medium text-brand-orange hover:underline break-all"
-                    >
-                      Watch on YouTube ↗
-                    </a>
+                    {h.youtubeUrl ? (
+                      <a
+                        href={h.youtubeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium text-brand-orange hover:underline break-all"
+                      >
+                        Watch on YouTube ↗
+                      </a>
+                    ) : (
+                      <p className="text-sm text-gray-400 italic">No video link</p>
+                    )}
                     {h.description && (
                       <p className="text-sm text-gray-700 mt-1">{h.description}</p>
                     )}
@@ -120,7 +124,7 @@ export default async function PortalHomeworkPage() {
                   <form action={markUndoneAction.bind(null, h.id)} className="shrink-0">
                     <button
                       type="submit"
-                      className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl border-2 border-brand-orange bg-brand-orange/10 transition-colors"
+                      className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl border-2 border-brand-orange bg-brand-orange/10 hover:bg-brand-orange/20 transition-colors"
                       aria-label="Mark as not done"
                     >
                       <svg className="w-5 h-5 text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
