@@ -5,6 +5,7 @@ import { db } from '@/lib/db'
 import { PostHomeworkForm } from './PostHomeworkForm'
 import { ArchiveButton } from './ArchiveButton'
 import { ArchivedSection } from './ArchivedSection'
+import { BookOpen, Clock } from 'lucide-react'
 
 function targetLabel(hw: { targetType: string; targetLevel: string | null; targetStudent: { name: string } | null }) {
   if (hw.targetType === 'ALL')     return 'Everyone'
@@ -40,9 +41,7 @@ export default async function HomeworkPage() {
       {/* Page header */}
       <div className="flex items-center gap-4">
         <div className="w-11 h-11 rounded-2xl bg-amber-100 flex items-center justify-center shrink-0">
-          <svg className="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-          </svg>
+          <BookOpen className="w-6 h-6 text-amber-600" />
         </div>
         <div>
           <h1 className="text-xl font-bold text-brand-brown-dark">Homework</h1>
@@ -65,9 +64,7 @@ export default async function HomeworkPage() {
       {activeHW.length === 0 ? (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
           <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center mx-auto mb-3">
-            <svg className="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-            </svg>
+            <BookOpen className="w-6 h-6 text-amber-400" />
           </div>
           <p className="text-gray-400 text-sm font-medium">No active assignments</p>
           <p className="text-gray-300 text-xs mt-1">Post one above to get started.</p>
@@ -93,9 +90,7 @@ export default async function HomeworkPage() {
                         </span>
                         {hw.dueDate && (
                           <span className="flex items-center gap-1 text-xs text-gray-400">
-                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
+                            <Clock className="w-3 h-3" />
                             Due {new Date(hw.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                           </span>
                         )}

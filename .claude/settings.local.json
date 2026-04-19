@@ -4,7 +4,17 @@
       "Bash(mkdir -p \"c:\\\\Aneesh\\\\Development\\\\Websites\\\\Nihanvi School Of Dance\\\\Website 2.0/src/components/layout\")",
       "Bash(mkdir -p \"c:\\\\Aneesh\\\\Development\\\\Websites\\\\Nihanvi School Of Dance\\\\Website 2.0/src/app/portal\")",
       "Bash(npx tsc:*)",
-      "Bash(npm test:*)"
+      "Bash(npm test:*)",
+      "mcp__magic__21st_magic_component_inspiration",
+      "Bash(python3 *)",
+      "Bash(tail -c +80000 \"C:\\\\Users\\\\paras\\\\.claude\\\\projects\\\\C--Aneesh-Development-websites-Nihanvi-School-Of-Dance-Website-2-0\\\\1d656106-dbd2-43b0-ad61-de005eec1bdd\\\\tool-results\\\\mcp-magic-21st_magic_component_inspiration-1776557531798.txt\")",
+      "Read(//tmp/**)",
+      "Bash(npm install *)",
+      "Bash(npm list *)",
+      "Bash(git add *)"
     ]
+  },
+  "enabledPlugins": {
+    "impeccable@impeccable": true
   }
 }

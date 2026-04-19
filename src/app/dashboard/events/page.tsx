@@ -5,6 +5,7 @@ import { db } from '@/lib/db'
 import { EventCalendar } from './EventCalendar'
 import { CreateEventForm } from './CreateEventForm'
 import { EventItem } from './EditEventRow'
+import { Calendar } from 'lucide-react'
 
 export default async function EventsPage() {
   const session = await getServerSession(authOptions)
@@ -29,9 +30,7 @@ export default async function EventsPage() {
       {/* Page header */}
       <div className="flex items-center gap-4">
         <div className="w-11 h-11 rounded-2xl bg-purple-100 flex items-center justify-center shrink-0">
-          <svg className="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 9v7.5" />
-          </svg>
+          <Calendar className="w-6 h-6 text-purple-600" />
         </div>
         <div>
           <h1 className="text-xl font-bold text-brand-brown-dark">Events</h1>
@@ -65,9 +64,7 @@ export default async function EventsPage() {
         {upcoming.length === 0 ? (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-10 text-center">
             <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center mx-auto mb-3">
-              <svg className="w-6 h-6 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75" />
-              </svg>
+              <Calendar className="w-6 h-6 text-purple-300" />
             </div>
             <p className="text-gray-400 text-sm">No upcoming events.</p>
           </div>

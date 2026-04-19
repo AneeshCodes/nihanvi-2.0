@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { InviteForm } from './InviteForm'
 import { StudentFilters } from './StudentFilters'
+import { Users, ChevronRight } from 'lucide-react'
 
 export default async function StudentsPage({
   searchParams,
@@ -40,9 +41,7 @@ export default async function StudentsPage({
       {/* Page header */}
       <div className="flex items-center gap-4">
         <div className="w-11 h-11 rounded-2xl bg-blue-100 flex items-center justify-center shrink-0">
-          <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-          </svg>
+          <Users className="w-6 h-6 text-blue-600" />
         </div>
         <div>
           <h1 className="text-xl font-bold text-brand-brown-dark">Students</h1>
@@ -70,9 +69,7 @@ export default async function StudentsPage({
       {students.length === 0 ? (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
           <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mx-auto mb-3">
-            <svg className="w-6 h-6 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0z" />
-            </svg>
+            <Users className="w-6 h-6 text-blue-300" />
           </div>
           <p className="text-gray-400 text-sm font-medium">No students match these filters.</p>
         </div>
@@ -107,9 +104,7 @@ export default async function StudentsPage({
                         {s.levelGroup}
                       </span>
                     )}
-                    <svg className="w-4 h-4 text-gray-300 group-hover:text-brand-orange transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
+                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-brand-orange transition-colors" />
                   </div>
                 </a>
               </li>

@@ -242,3 +242,23 @@ Running log of work done in this project. Appended after every request.
 - Fixed portal homework `<a href={h.youtubeUrl}>` rendering `href="null"` when URL is absent — now conditionally renders fallback text
 - Added `hover:bg-brand-orange/20` to completed homework "mark undone" checkmark button (was missing hover state)
 - `npx tsc --noEmit` zero errors
+
+### 2026-04-18 — Full UI redesign using 21stDev MCP inspiration
+- Created branch `ui-redesign-2026-04-18` for undo capability (run `git checkout master` to revert all changes)
+- Auth layout: split-screen desktop with brand-brown-dark panel, decorative blobs, music note icon, tagline
+- Login form: password visibility toggle, welcome heading, soft input bg (gray-50), button shadow glow
+- All auth cards: upgraded to `shadow-xl shadow-brand-brown-dark/5 border border-orange-100 p-7`
+- AppShell: icon logo mark (w-9 orange square), gradient avatar, active item shows dot indicator, backdrop-blur mobile overlay
+- Dashboard home: stat cards have colored icon squares (blue/purple/amber), date subtitle; quick links have icon tiles that animate on hover
+- Portal home: section headers get colored icon badges, event chips have border, homework items show clock icon for due date
+- SubmitButton: now has shadow glow, `rounded-xl`, `className` prop for override
+- globals.css: added `@layer components` with `.input-base`, `.btn-primary`, `.card`, `.page-header`, `.section-label` utilities
+- Pre-existing email test failure (1/13) unrelated to UI — confirmed by testing both before/after stash
+
+### 2026-04-18 — Overhaul all inner dashboard and portal pages
+- User noted previous UI redesign didn't visibly change the inner pages — only auth + home pages had been updated
+- Sidebar: changed background from white to warm cream (#FFF8F0) + orange-tinted border — visible on every authenticated page
+- All 8 inner pages now have consistent page header (colored icon square + title + count subtitle) and section dividers
+- Dashboard: Students (gradient avatar, hover rows), Homework (progress bar, due urgency), Events (icon empty states), Payments (stat cards)
+- Portal: Announcements (level accent bar + fire badge), Homework (overdue urgency system, strikethrough done, progress widget), Events (purple chip, RSVP layout)
+- Pushed to Vercel preview branch `ui-redesign-2026-04-18`
