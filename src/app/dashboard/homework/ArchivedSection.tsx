@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { unarchiveHomeworkAction } from './actions'
+import { ChevronDown } from 'lucide-react'
 
 type ArchivedHW = {
   id: string
@@ -33,12 +34,7 @@ export function ArchivedSection({ items }: { items: ArchivedHW[] }) {
         className="w-full flex items-center justify-between px-5 py-4 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors"
       >
         <span>Archived assignments ({items.length})</span>
-        <svg
-          className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`}
-          fill="none" viewBox="0 0 24 24" stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <ChevronDown className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open && (

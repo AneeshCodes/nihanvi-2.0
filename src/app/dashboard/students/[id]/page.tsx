@@ -7,6 +7,7 @@ import { db } from '@/lib/db'
 import { ResendSetupButton } from './ResendSetupButton'
 import { LevelGroupForm } from './LevelGroupForm'
 import { unenrollStudentAction, reactivateStudentAction } from './actions'
+import { ArrowLeft } from 'lucide-react'
 
 function formatDate(d: Date) {
   return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -36,10 +37,8 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
     <div className="max-w-3xl mx-auto space-y-5">
 
       {/* Back link */}
-      <Link href="/dashboard/students" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-brand-orange transition-colors">
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
+      <Link href="/dashboard/students" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-brand-orange transition-colors font-medium">
+        <ArrowLeft className="w-4 h-4" />
         All students
       </Link>
 
