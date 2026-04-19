@@ -22,8 +22,7 @@ export function LevelGroupForm({ userId, current }: { userId: string; current: s
       <select
         value={value}
         onChange={e => { setValue(e.target.value); setSaved(false) }}
-        className="flex-1 border border-gray-200 rounded-lg px-4 py-3 text-sm
-                   focus:outline-none focus:border-brand-orange bg-white"
+        className="input-base [color-scheme:dark] flex-1"
       >
         <option value="">— not assigned —</option>
         {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
@@ -32,7 +31,8 @@ export function LevelGroupForm({ userId, current }: { userId: string; current: s
         onClick={handleSave}
         disabled={saving}
         className="bg-brand-orange text-white font-bold px-5 py-3 rounded-lg text-sm
-                   hover:bg-brand-brown-mid transition-colors disabled:opacity-50 min-h-[44px] shrink-0"
+                   hover:bg-brand-brown-mid transition-colors disabled:opacity-50 min-h-[44px] shrink-0
+                   shadow-lg shadow-brand-orange/20"
       >
         {saving ? 'Saving…' : saved ? 'Saved ✓' : 'Save'}
       </button>

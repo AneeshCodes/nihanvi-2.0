@@ -19,13 +19,13 @@ export function StudentFilters() {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3 flex flex-wrap gap-3 items-center">
-      <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Filter by</span>
+    <div className="glass px-4 py-3 flex flex-wrap gap-3 items-center">
+      <span className="eyebrow">Filter by</span>
 
       <select
         value={level}
         onChange={e => update('level', e.target.value)}
-        className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white text-gray-700"
+        className="input-base [color-scheme:dark] w-auto"
       >
         <option value="">All levels</option>
         {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
@@ -35,7 +35,7 @@ export function StudentFilters() {
       <select
         value={status}
         onChange={e => update('status', e.target.value)}
-        className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white text-gray-700"
+        className="input-base [color-scheme:dark] w-auto"
       >
         <option value="">Active students</option>
         <option value="inactive">Inactive students</option>

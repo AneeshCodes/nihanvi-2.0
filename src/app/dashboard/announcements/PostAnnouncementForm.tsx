@@ -11,32 +11,32 @@ export function PostAnnouncementForm() {
   return (
     <form action={action} className="space-y-4">
       {state?.status === 'success' && (
-        <p className="text-sm text-green-600 bg-green-50 rounded-lg px-4 py-2">{state.message}</p>
+        <p className="text-sm text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-4 py-2">{state.message}</p>
       )}
       {state?.status === 'error' && (
-        <p className="text-sm text-brand-red bg-red-50 rounded-lg px-4 py-2">{state.message}</p>
+        <p className="text-sm text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2">{state.message}</p>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Message <span className="text-brand-red">*</span>
+        <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">
+          Message <span className="text-red-300">*</span>
         </label>
         <textarea
           name="body"
           rows={4}
           required
           placeholder="Write your announcement here..."
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white resize-none"
+          className="input-base resize-none"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Target level <span className="text-gray-400">(leave blank to send to everyone)</span>
+        <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">
+          Target level <span className="text-white/40 font-normal normal-case tracking-normal">(leave blank to send to everyone)</span>
         </label>
         <select
           name="targetLevel"
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+          className="input-base [color-scheme:dark]"
         >
           <option value="">— everyone —</option>
           {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}

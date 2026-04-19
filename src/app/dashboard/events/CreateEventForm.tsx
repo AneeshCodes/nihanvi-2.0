@@ -10,60 +10,60 @@ export function CreateEventForm() {
   return (
     <form action={action} className="space-y-4">
       {state?.status === 'success' && (
-        <p className="text-sm text-green-600 bg-green-50 rounded-lg px-4 py-2">{state.message}</p>
+        <p className="text-sm text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-4 py-2">{state.message}</p>
       )}
       {state?.status === 'error' && (
-        <p className="text-sm text-brand-red bg-red-50 rounded-lg px-4 py-2">{state.message}</p>
+        <p className="text-sm text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2">{state.message}</p>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Title <span className="text-brand-red">*</span>
+          <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">
+            Title <span className="text-red-300">*</span>
           </label>
           <input
             name="title"
             type="text"
             required
             placeholder="e.g. Annual Recital"
-            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+            className="input-base"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Date <span className="text-brand-red">*</span>
+          <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">
+            Date <span className="text-red-300">*</span>
           </label>
           <input
             name="eventDate"
             type="date"
             required
-            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white [color-scheme:light]"
+            className="input-base [color-scheme:dark]"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Time <span className="text-brand-red">*</span>
+          <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">
+            Time <span className="text-red-300">*</span>
           </label>
           <input
             name="eventTime"
             type="time"
             required
-            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white [color-scheme:light]"
+            className="input-base [color-scheme:dark]"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Description <span className="text-gray-400 font-normal">(optional — location, dress code, etc.)</span>
+        <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">
+          Description <span className="text-white/40 font-normal normal-case tracking-normal">(optional — location, dress code, etc.)</span>
         </label>
         <textarea
           name="description"
           rows={3}
           placeholder="Location, dress code, etc."
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white resize-none"
+          className="input-base resize-none"
         />
       </div>
 

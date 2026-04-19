@@ -7,20 +7,20 @@ import { SubmitButton } from '@/components/forms/SubmitButton'
 
 function FieldError({ state, field }: { state: { status: string; message: string; field?: string } | null; field: string }) {
   if (!state || state.status !== 'error' || state.field !== field) return null
-  return <p role="alert" className="mt-1 text-sm text-brand-red">{state.message}</p>
+  return <p role="alert" className="mt-1 text-sm text-red-300">{state.message}</p>
 }
 
 function Label({ htmlFor, children, required }: { htmlFor: string; children: React.ReactNode; required?: boolean }) {
   return (
-    <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700 mb-1.5">
+    <label htmlFor={htmlFor} className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1.5">
       {children}
-      {required && <span className="text-brand-red ml-1" aria-hidden="true">*</span>}
+      {required && <span className="text-red-300 ml-1" aria-hidden="true">*</span>}
     </label>
   )
 }
 
-const inputClass = "w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
-const selectClass = "border border-gray-200 rounded-lg px-3 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+const inputClass = "input-base"
+const selectClass = "input-base [color-scheme:dark]"
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December']
 
@@ -201,7 +201,7 @@ export function EnrollForm({ token, prefillEmail }: { token: string; prefillEmai
         <div>
           <Label htmlFor="parentName" required={isMinor === true}>
             Parent / guardian name
-            {isMinor === null && <span className="text-gray-400 font-normal ml-1">(required if under 18)</span>}
+            {isMinor === null && <span className="text-white/40 font-normal ml-1 normal-case tracking-normal">(required if under 18)</span>}
           </Label>
           <input
             id="parentName"
@@ -229,8 +229,8 @@ export function EnrollForm({ token, prefillEmail }: { token: string; prefillEmai
 
       {/* Address */}
       <fieldset className="space-y-3">
-        <legend className="block text-sm font-medium text-gray-700">
-          Home address <span className="text-brand-red" aria-hidden="true">*</span>
+        <legend className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest">
+          Home address <span className="text-red-300" aria-hidden="true">*</span>
         </legend>
         <input
           name="streetAddress"
@@ -288,20 +288,20 @@ export function EnrollForm({ token, prefillEmail }: { token: string; prefillEmai
 
       {/* Interests */}
       <div className="space-y-3">
-        <p className="text-sm font-medium text-gray-700">Interests</p>
+        <p className="text-[11px] font-semibold text-white/50 uppercase tracking-widest">Interests</p>
         <label className="flex items-center gap-3 cursor-pointer min-h-[44px]">
           <input type="checkbox" name="certificationInterest" className="w-4 h-4 rounded accent-brand-orange" />
-          <span className="text-sm text-gray-700">Interested in certification</span>
+          <span className="text-sm text-white/70">Interested in certification</span>
         </label>
         <label className="flex items-center gap-3 cursor-pointer min-h-[44px]">
           <input type="checkbox" name="performanceInterest" className="w-4 h-4 rounded accent-brand-orange" />
-          <span className="text-sm text-gray-700">Interested in performances</span>
+          <span className="text-sm text-white/70">Interested in performances</span>
         </label>
       </div>
 
       {/* Signature */}
-      <div className="border-t border-gray-100 pt-5">
-        <p className="text-sm text-gray-500 mb-4">
+      <div className="hairline pt-5">
+        <p className="text-sm text-white/50 mb-4">
           By signing below, you confirm the information is accurate and consent to enrollment.
         </p>
         <Label htmlFor="signature" required>Full name as signature</Label>
@@ -310,7 +310,7 @@ export function EnrollForm({ token, prefillEmail }: { token: string; prefillEmai
       </div>
 
       {state?.status === 'error' && state.field === 'token' && (
-        <p role="alert" className="text-sm text-brand-red text-center">{state.message}</p>
+        <p role="alert" className="text-sm text-red-300 text-center">{state.message}</p>
       )}
 
       <SubmitButton label="Complete Enrollment" pendingLabel="Submitting…" />

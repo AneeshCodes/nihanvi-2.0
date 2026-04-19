@@ -263,6 +263,18 @@ Running log of work done in this project. Appended after every request.
 - Portal: Announcements (level accent bar + fire badge), Homework (overdue urgency system, strikethrough done, progress widget), Events (purple chip, RSVP layout)
 - Pushed to Vercel preview branch `ui-redesign-2026-04-18`
 
+### 2026-04-18 — Dark cinematic theme: converted 20 inner client components
+- Applied mechanical class swaps across all listed files: gray-* → white/[0.0X] + white/XX opacity scale, green/red/yellow/blue/purple → emerald/red/amber/sky/purple -500/10 + -300 text + -500/20 border
+- `bg-white rounded-2xl border border-gray-100 shadow-sm` → `glass` utility everywhere
+- Inline input classes replaced with `input-base` + `[color-scheme:dark]` for selects/date pickers
+- Labels upgraded to 11px uppercase tracked white/50; section headers use `eyebrow` class
+- RsvpButtons (portal): glass pill styling with state-colored active variants (emerald/amber/red 15/30/300)
+- EventCalendar: cells bg-white/[0.02], today ring brand-orange/40, event dot now has glow shadow
+- Enroll page: wrapped in `glass-raised overflow-hidden` + `px-6 sm:px-7 py-7` inner div
+- SignOutButton upgraded to pill: text-white/70 hover:white, bg-white/[0.04] hover:white/[0.08], border-white/[0.07]
+- `text-brand-brown-dark` headings → `text-white`; `text-brand-red` → `text-red-300`
+- `npx tsc --noEmit`: zero errors
+
 ### 2026-04-18 — Complete UI overhaul: Lucide icons + modernized all pages
 - Replaced ALL inline SVG icons across every page/component with lucide-react imports
 - dashboard/page.tsx: new dramatic stat cards (4xl numbers, ring icon badges, accent bar on hover, trend widget), greeting with time-of-day icon (Sun/Sunset/Moon)

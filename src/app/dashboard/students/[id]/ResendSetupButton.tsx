@@ -19,13 +19,13 @@ export function ResendSetupButton({ userId }: { userId: string }) {
       <button
         onClick={handleClick}
         disabled={status !== 'idle'}
-        className="text-sm text-brand-orange hover:text-brand-brown-mid disabled:opacity-50 transition-colors min-h-[44px] inline-flex items-center gap-1.5"
+        className="text-sm text-brand-orange hover:text-brand-yellow disabled:opacity-50 transition-colors min-h-[44px] inline-flex items-center gap-1.5"
       >
         {status === 'sent' ? <CheckCircle2 className="w-4 h-4" /> : <Mail className="w-4 h-4" />}
         {status === 'sending' ? 'Sending…' : status === 'sent' ? 'Sent!' : 'Resend setup link'}
       </button>
       {status === 'sent' && (
-        <span className="text-sm text-green-600">Setup email sent.</span>
+        <span className="text-sm text-emerald-300">Setup email sent.</span>
       )}
     </div>
   )

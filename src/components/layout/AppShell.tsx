@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { SignOutButton } from './SignOutButton'
-import { Music2, Menu, X, ChevronRight } from 'lucide-react'
+import { signOut } from 'next-auth/react'
+import { Music2, LogOut, ChevronDown } from 'lucide-react'
 
 interface NavItem {
   label: string
@@ -20,120 +20,135 @@ interface AppShellProps {
 }
 
 export function AppShell({ navItems, userName, initials, children }: AppShellProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
-  const nav = (
-    <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-      {navItems.map((item) => {
-        const active = pathname === item.href ||
-          (item.href !== '/dashboard' && item.href !== '/portal' && pathname.startsWith(item.href))
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={() => setSidebarOpen(false)}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 min-h-[44px] group relative
-              ${active
-                ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/30'
-                : 'text-orange-100/60 hover:bg-white/10 hover:text-white'
-              }`}
-          >
-            <span className="w-5 h-5 shrink-0">{item.icon}</span>
-            <span className="flex-1">{item.label}</span>
-            {active && <ChevronRight className="w-3.5 h-3.5 opacity-60" />}
-          </Link>
-        )
-      })}
-    </nav>
-  )
+  const isActive = (href: string) =>
+    pathname === href ||
+    (href !== '/dashboard' && href !== '/portal' && pathname.startsWith(href))
 
-  const sidebar = (
-    <div className="flex flex-col h-full bg-gradient-to-b from-brand-brown-dark to-[#1a0500]">
-      {/* Logo */}
-      <div className="px-4 py-5 border-b border-white/10">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-brand-orange flex items-center justify-center shadow-lg shadow-brand-orange/40 shrink-0">
-            <Music2 className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <span className="font-display text-base text-white leading-tight block">Nihanvi</span>
-            <span className="text-[11px] text-orange-200/50 leading-tight block tracking-wide">School of Dance</span>
-          </div>
-        </div>
-      </div>
-
-      {nav}
-
-      {/* User + sign out */}
-      <div className="px-3 py-4 border-t border-white/10">
-        <div className="flex items-center gap-3 px-2 py-2 mb-2 rounded-xl hover:bg-white/5 transition-colors">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-orange to-brand-brown-mid flex items-center justify-center shrink-0 shadow-md ring-2 ring-white/10">
-            <span className="text-white text-xs font-bold">{initials}</span>
-          </div>
-          <div className="min-w-0 flex-1">
-            <span className="text-sm font-medium text-white/90 truncate block">{userName}</span>
-            <span className="text-xs text-white/40">Signed in</span>
-          </div>
-        </div>
-        <SignOutButton />
-      </div>
-    </div>
-  )
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false)
+    }
+    document.addEventListener('mousedown', onClickOutside)
+    return () => document.removeEventListener('mousedown', onClickOutside)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Desktop sidebar */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-60 lg:flex-col shadow-2xl">
-        {sidebar}
+    <div className="min-h-screen relative overflow-x-hidden">
+      {/* Ambient background */}
+      <div className="pointer-events-none fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0604] via-[#0f0807] to-[#0a0604]" />
+        <div className="absolute top-[-200px] left-1/4 w-[700px] h-[700px] bg-brand-orange/[0.08] rounded-full blur-[140px]" />
+        <div className="absolute bottom-[-200px] right-[-100px] w-[600px] h-[600px] bg-amber-600/[0.06] rounded-full blur-[140px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-brand-brown-mid/[0.05] rounded-full blur-[120px]" />
       </div>
 
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-          aria-hidden="true"
-        />
-      )}
+      {/* Top bar */}
+      <header className="sticky top-0 z-40 backdrop-blur-2xl bg-[#0a0604]/70 border-b border-white/[0.05]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+          {/* Brand */}
+          <Link href={navItems[0].href} className="flex items-center gap-2.5 group shrink-0">
+            <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-brand-orange to-amber-700 flex items-center justify-center shadow-lg shadow-brand-orange/30">
+              <Music2 className="w-4 h-4 text-white" />
+              <div className="absolute inset-0 rounded-xl ring-1 ring-white/20" />
+            </div>
+            <span className="font-display italic text-xl text-white tracking-tight hidden sm:block">
+              Nihanvi
+            </span>
+          </Link>
 
-      {/* Mobile sidebar drawer */}
-      <div
-        id="mobile-sidebar"
-        className={`fixed inset-y-0 left-0 z-50 w-64 flex flex-col lg:hidden transform transition-transform duration-300 ease-in-out shadow-2xl
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-      >
-        {sidebar}
-      </div>
+          {/* Desktop floating pill nav */}
+          <nav className="hidden lg:flex items-center gap-0.5 bg-white/[0.04] border border-white/[0.08] rounded-full p-1 backdrop-blur-xl">
+            {navItems.map((item) => {
+              const active = isActive(item.href)
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`relative px-4 py-2 text-xs font-medium rounded-full transition-all duration-200 ${
+                    active
+                      ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/40'
+                      : 'text-white/60 hover:text-white hover:bg-white/[0.06]'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
+          </nav>
 
-      {/* Mobile top bar */}
-      <div className="sticky top-0 z-30 h-14 bg-white border-b border-gray-200 flex items-center px-4 gap-3 lg:hidden shadow-sm">
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-gray-100 transition-colors text-gray-500"
-          aria-label="Open menu"
-          aria-expanded={sidebarOpen}
-          aria-controls="mobile-sidebar"
-        >
-          {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
-        <div className="flex items-center gap-2 flex-1 justify-center">
-          <div className="w-6 h-6 rounded-lg bg-brand-orange flex items-center justify-center shadow-sm">
-            <Music2 className="w-3.5 h-3.5 text-white" />
+          {/* Avatar menu */}
+          <div className="relative shrink-0" ref={menuRef}>
+            <button
+              onClick={() => setMenuOpen((o) => !o)}
+              className="flex items-center gap-2.5 p-1 pl-3 rounded-full hover:bg-white/[0.05] transition-colors"
+              aria-label="Account menu"
+              aria-expanded={menuOpen}
+            >
+              <span className="hidden sm:flex flex-col items-end leading-tight">
+                <span className="text-[9px] text-white/35 uppercase tracking-[0.15em]">Signed in</span>
+                <span className="text-xs font-medium text-white/85 truncate max-w-[140px]">
+                  {userName}
+                </span>
+              </span>
+              <span className="relative w-9 h-9 rounded-full bg-gradient-to-br from-brand-orange to-amber-700 flex items-center justify-center shadow-lg shadow-brand-orange/25 ring-1 ring-white/15">
+                <span className="text-xs font-bold text-white">{initials}</span>
+              </span>
+              <ChevronDown className={`w-3.5 h-3.5 text-white/40 transition-transform hidden sm:block ${menuOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-56 glass-raised overflow-hidden">
+                <div className="px-4 py-3 border-b border-white/[0.06]">
+                  <div className="text-xs text-white/40">Signed in as</div>
+                  <div className="text-sm font-medium text-white/90 truncate">{userName}</div>
+                </div>
+                <button
+                  onClick={() => signOut({ callbackUrl: '/login' })}
+                  className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-white/70 hover:bg-white/[0.05] hover:text-white transition-colors min-h-[44px]"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign out
+                </button>
+              </div>
+            )}
           </div>
-          <span className="font-display text-base text-brand-brown-dark">Nihanvi</span>
         </div>
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-orange to-brand-brown-mid flex items-center justify-center shadow-sm ring-2 ring-orange-100">
-          <span className="text-white text-xs font-bold">{initials}</span>
-        </div>
-      </div>
+      </header>
 
       {/* Main content */}
-      <main className="lg:pl-60 min-h-screen">
-        <div className="px-4 py-6 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-          {children}
-        </div>
+      <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10 pb-28 lg:pb-16">
+        {children}
       </main>
+
+      {/* Mobile bottom tab bar */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 backdrop-blur-2xl bg-[#0a0604]/85 border-t border-white/[0.06] pb-safe">
+        <div className="flex items-stretch">
+          {navItems.map((item) => {
+            const active = isActive(item.href)
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 min-h-[60px] relative transition-colors ${
+                  active ? 'text-brand-orange' : 'text-white/45 hover:text-white/70'
+                }`}
+              >
+                {active && (
+                  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2px] bg-brand-orange rounded-full shadow-[0_0_12px_rgba(232,130,12,0.8)]" />
+                )}
+                <span className="w-5 h-5 flex items-center justify-center">{item.icon}</span>
+                <span className="text-[10px] font-medium tracking-tight leading-none">
+                  {item.label}
+                </span>
+              </Link>
+            )
+          })}
+        </div>
+      </nav>
     </div>
   )
 }

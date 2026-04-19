@@ -15,19 +15,19 @@ export function PostHomeworkForm({ students }: { students: Student[] }) {
   return (
     <form action={action} className="space-y-4">
       {state?.status === 'success' && (
-        <p className="text-sm text-green-600 bg-green-50 rounded-lg px-4 py-2">{state.message}</p>
+        <p className="text-sm text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-4 py-2">{state.message}</p>
       )}
       {state?.status === 'error' && (
-        <p className="text-sm text-brand-red bg-red-50 rounded-lg px-4 py-2">{state.message}</p>
+        <p className="text-sm text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2">{state.message}</p>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Assign to</label>
+        <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Assign to</label>
         <select
           name="targetType"
           value={targetType}
           onChange={e => setTargetType(e.target.value)}
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+          className="input-base [color-scheme:dark]"
         >
           <option value="ALL">Everyone</option>
           <option value="LEVEL">Level group</option>
@@ -37,12 +37,12 @@ export function PostHomeworkForm({ students }: { students: Student[] }) {
 
       {targetType === 'LEVEL' && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Level group <span className="text-brand-red">*</span>
+          <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">
+            Level group <span className="text-red-300">*</span>
           </label>
           <select
             name="targetLevel"
-            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+            className="input-base [color-scheme:dark]"
           >
             <option value="">— select level —</option>
             {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
@@ -52,12 +52,12 @@ export function PostHomeworkForm({ students }: { students: Student[] }) {
 
       {targetType === 'STUDENT' && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Student <span className="text-brand-red">*</span>
+          <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">
+            Student <span className="text-red-300">*</span>
           </label>
           <select
             name="targetStudentId"
-            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+            className="input-base [color-scheme:dark]"
           >
             <option value="">— select student —</option>
             {students.map((s) => (
@@ -68,31 +68,31 @@ export function PostHomeworkForm({ students }: { students: Student[] }) {
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">YouTube URL</label>
+        <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">YouTube URL</label>
         <input
           name="youtubeUrl"
           type="url"
           placeholder="https://youtube.com/..."
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+          className="input-base"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Description</label>
         <textarea
           name="description"
           rows={3}
           placeholder="Practice notes or instructions..."
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white resize-none"
+          className="input-base resize-none"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Due date</label>
+        <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Due date</label>
         <input
           name="dueDate"
           type="date"
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white text-gray-700 [color-scheme:light]"
+          className="input-base [color-scheme:dark]"
         />
       </div>
 

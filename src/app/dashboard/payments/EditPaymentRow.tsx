@@ -6,9 +6,9 @@ import { updatePaymentAction } from './actions'
 import { SubmitButton } from '@/components/forms/SubmitButton'
 
 const statusStyles: Record<string, string> = {
-  PAID:    'bg-green-50 text-green-700',
-  PENDING: 'bg-yellow-50 text-yellow-700',
-  OVERDUE: 'bg-red-50 text-brand-red',
+  PAID:    'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20',
+  PENDING: 'bg-amber-500/10 text-amber-300 border border-amber-500/20',
+  OVERDUE: 'bg-red-500/10 text-red-300 border border-red-500/20',
 }
 
 const methodLabel: Record<string, string> = {
@@ -44,27 +44,27 @@ export function PaymentItem({ payment: p }: { payment: Payment }) {
       <div className="flex items-center gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-medium text-sm text-gray-800">{p.studentName}</span>
+            <span className="font-medium text-sm text-white/90">{p.studentName}</span>
             <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusStyles[p.status]}`}>
               {p.status.charAt(0) + p.status.slice(1).toLowerCase()}
             </span>
             {p.method && (
-              <span className="text-xs text-gray-400">{methodLabel[p.method]}</span>
+              <span className="text-xs text-white/40">{methodLabel[p.method]}</span>
             )}
           </div>
-          <div className="text-xs text-gray-400 mt-0.5">
+          <div className="text-xs text-white/40 mt-0.5">
             Due {new Date(p.dueDate).toLocaleDateString()}
             {p.paidDate && ` · Paid ${new Date(p.paidDate).toLocaleDateString()}`}
             {p.notes && ` · ${p.notes}`}
           </div>
         </div>
-        <div className="text-sm font-bold text-gray-800 shrink-0">
+        <div className="text-sm font-bold text-white/90 shrink-0">
           ${(p.amount / 100).toFixed(2)}
         </div>
         <button
           type="button"
           onClick={() => setEditing((e) => !e)}
-          className="text-xs text-gray-400 hover:text-brand-orange transition-colors whitespace-nowrap"
+          className="text-xs text-white/40 hover:text-brand-orange transition-colors whitespace-nowrap"
         >
           {editing ? 'Cancel' : 'Edit'}
         </button>
@@ -72,18 +72,18 @@ export function PaymentItem({ payment: p }: { payment: Payment }) {
 
       {/* Inline edit form — full width, below content row */}
       {editing && (
-        <div className="mt-3 bg-gray-50 rounded-xl p-4 border border-gray-100">
+        <div className="mt-3 bg-white/[0.03] rounded-xl p-4 border border-white/[0.08]">
           <form action={formAction} className="space-y-3">
             {state?.status === 'error' && (
-              <p className="text-xs text-brand-red bg-red-50 rounded-lg px-3 py-2">{state.message}</p>
+              <p className="text-xs text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{state.message}</p>
             )}
             {state?.status === 'success' && (
-              <p className="text-xs text-green-600 bg-green-50 rounded-lg px-3 py-2">{state.message}</p>
+              <p className="text-xs text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2">{state.message}</p>
             )}
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Amount ($)</label>
+                <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Amount ($)</label>
                 <input
                   name="amount"
                   type="number"
@@ -91,16 +91,16 @@ export function PaymentItem({ payment: p }: { payment: Payment }) {
                   step="0.01"
                   required
                   defaultValue={(p.amount / 100).toFixed(2)}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white"
+                  className="input-base"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Status</label>
                 <select
                   name="status"
                   defaultValue={p.status}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white"
+                  className="input-base [color-scheme:dark]"
                 >
                   <option value="PENDING">Pending</option>
                   <option value="PAID">Paid</option>
@@ -109,11 +109,11 @@ export function PaymentItem({ payment: p }: { payment: Payment }) {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Method</label>
+                <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Method</label>
                 <select
                   name="method"
                   defaultValue={p.method ?? ''}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white"
+                  className="input-base [color-scheme:dark]"
                 >
                   <option value="">— none —</option>
                   <option value="ZELLE">Zelle</option>
@@ -123,24 +123,24 @@ export function PaymentItem({ payment: p }: { payment: Payment }) {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Date paid</label>
+                <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Date paid</label>
                 <input
                   name="paidDate"
                   type="date"
                   defaultValue={toDateInput(p.paidDate)}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white [color-scheme:light]"
+                  className="input-base [color-scheme:dark]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Notes</label>
+              <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Notes</label>
               <input
                 name="notes"
                 type="text"
                 defaultValue={p.notes ?? ''}
                 placeholder="Optional notes..."
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white"
+                className="input-base"
               />
             </div>
 

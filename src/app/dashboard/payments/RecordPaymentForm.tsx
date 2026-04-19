@@ -12,21 +12,21 @@ export function RecordPaymentForm({ students }: { students: Student[] }) {
   return (
     <form action={action} className="space-y-4">
       {state?.status === 'success' && (
-        <p className="text-sm text-green-600 bg-green-50 rounded-lg px-4 py-2">{state.message}</p>
+        <p className="text-sm text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-4 py-2">{state.message}</p>
       )}
       {state?.status === 'error' && (
-        <p className="text-sm text-brand-red bg-red-50 rounded-lg px-4 py-2">{state.message}</p>
+        <p className="text-sm text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2">{state.message}</p>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Student <span className="text-brand-red">*</span>
+          <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">
+            Student <span className="text-red-300">*</span>
           </label>
           <select
             name="studentId"
             required
-            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+            className="input-base [color-scheme:dark]"
           >
             <option value="">— select student —</option>
             {students.map((s) => (
@@ -36,8 +36,8 @@ export function RecordPaymentForm({ students }: { students: Student[] }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Amount ($) <span className="text-brand-red">*</span>
+          <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">
+            Amount ($) <span className="text-red-300">*</span>
           </label>
           <input
             name="amount"
@@ -46,28 +46,28 @@ export function RecordPaymentForm({ students }: { students: Student[] }) {
             step="0.01"
             required
             placeholder="e.g. 120.00"
-            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+            className="input-base"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Due date <span className="text-brand-red">*</span>
+          <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">
+            Due date <span className="text-red-300">*</span>
           </label>
           <input
             name="dueDate"
             type="date"
             required
-            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+            className="input-base [color-scheme:dark]"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+          <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Status</label>
           <select
             name="status"
             defaultValue="PENDING"
-            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+            className="input-base [color-scheme:dark]"
           >
             <option value="PENDING">Pending</option>
             <option value="PAID">Paid</option>
@@ -76,10 +76,10 @@ export function RecordPaymentForm({ students }: { students: Student[] }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Method</label>
+          <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Method</label>
           <select
             name="method"
-            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+            className="input-base [color-scheme:dark]"
           >
             <option value="">— optional —</option>
             <option value="ZELLE">Zelle</option>
@@ -89,22 +89,22 @@ export function RecordPaymentForm({ students }: { students: Student[] }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Date paid</label>
+          <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Date paid</label>
           <input
             name="paidDate"
             type="date"
-            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+            className="input-base [color-scheme:dark]"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+        <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Notes</label>
         <input
           name="notes"
           type="text"
           placeholder="Optional notes..."
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-orange bg-white"
+          className="input-base"
         />
       </div>
 

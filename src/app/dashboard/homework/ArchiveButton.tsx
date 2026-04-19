@@ -12,7 +12,7 @@ export function ArchiveButton({ id }: { id: string }) {
     <button
       type="button"
       onClick={handleClick}
-      className="text-xs text-gray-400 hover:text-brand-red transition-colors whitespace-nowrap"
+      className="text-xs text-white/40 hover:text-red-300 transition-colors whitespace-nowrap"
     >
       Archive
     </button>

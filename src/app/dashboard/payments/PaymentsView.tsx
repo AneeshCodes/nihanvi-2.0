@@ -23,9 +23,9 @@ type Student = {
 }
 
 const statusStyles: Record<string, string> = {
-  PAID:    'bg-green-50 text-green-700',
-  PENDING: 'bg-yellow-50 text-yellow-700',
-  OVERDUE: 'bg-red-50 text-brand-red',
+  PAID:    'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20',
+  PENDING: 'bg-amber-500/10 text-amber-300 border border-amber-500/20',
+  OVERDUE: 'bg-red-500/10 text-red-300 border border-red-500/20',
 }
 
 function StudentRow({ student }: { student: Student }) {
@@ -38,16 +38,16 @@ function StudentRow({ student }: { student: Student }) {
         {/* Name + email */}
         <div className="flex-1 min-w-0">
           <div className="font-medium text-sm text-brand-orange">{student.name}</div>
-          <div className="text-xs text-gray-400">{student.email}</div>
+          <div className="text-xs text-white/40">{student.email}</div>
         </div>
 
         {/* Level */}
-        <div className="hidden sm:block text-sm text-gray-600 w-24 shrink-0">
-          {student.levelGroup ?? <span className="text-gray-300">—</span>}
+        <div className="hidden sm:block text-sm text-white/70 w-24 shrink-0">
+          {student.levelGroup ?? <span className="text-white/25">—</span>}
         </div>
 
         {/* Joined */}
-        <div className="hidden md:block text-xs text-gray-400 w-28 shrink-0">
+        <div className="hidden md:block text-xs text-white/40 w-28 shrink-0">
           {new Date(student.createdAt).toLocaleDateString('en-US', {
             month: 'short', day: 'numeric', year: 'numeric',
           })}
@@ -60,7 +60,7 @@ function StudentRow({ student }: { student: Student }) {
               {student.latestPayment.status.charAt(0) + student.latestPayment.status.slice(1).toLowerCase()}
             </span>
           ) : (
-            <span className="text-xs text-gray-300">—</span>
+            <span className="text-xs text-white/25">—</span>
           )}
         </div>
 
@@ -68,7 +68,7 @@ function StudentRow({ student }: { student: Student }) {
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 text-gray-600 hover:border-brand-orange hover:text-brand-orange transition-colors whitespace-nowrap shrink-0"
+          className="text-xs border border-white/[0.08] rounded-lg px-3 py-1.5 text-white/70 hover:border-brand-orange hover:text-brand-orange transition-colors whitespace-nowrap shrink-0 bg-white/[0.02]"
         >
           {open ? 'Cancel' : 'Record Payment'}
         </button>
@@ -76,20 +76,20 @@ function StudentRow({ student }: { student: Student }) {
 
       {/* Inline record payment form */}
       {open && (
-        <div className="mt-3 bg-gray-50 rounded-xl p-4 border border-gray-100">
+        <div className="mt-3 bg-white/[0.03] rounded-xl p-4 border border-white/[0.08]">
           <form action={formAction} className="space-y-3">
             <input type="hidden" name="studentId" value={student.id} />
 
             {state?.status === 'error' && (
-              <p className="text-xs text-brand-red bg-red-50 rounded-lg px-3 py-2">{state.message}</p>
+              <p className="text-xs text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{state.message}</p>
             )}
             {state?.status === 'success' && (
-              <p className="text-xs text-green-600 bg-green-50 rounded-lg px-3 py-2">{state.message}</p>
+              <p className="text-xs text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2">{state.message}</p>
             )}
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Amount ($) *</label>
+                <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Amount ($) *</label>
                 <input
                   name="amount"
                   type="number"
@@ -97,26 +97,26 @@ function StudentRow({ student }: { student: Student }) {
                   step="0.01"
                   required
                   placeholder="120.00"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white"
+                  className="input-base"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Due date *</label>
+                <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Due date *</label>
                 <input
                   name="dueDate"
                   type="date"
                   required
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white [color-scheme:light]"
+                  className="input-base [color-scheme:dark]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Status</label>
                 <select
                   name="status"
                   defaultValue="PENDING"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white"
+                  className="input-base [color-scheme:dark]"
                 >
                   <option value="PENDING">Pending</option>
                   <option value="PAID">Paid</option>
@@ -125,10 +125,10 @@ function StudentRow({ student }: { student: Student }) {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Method</label>
+                <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Method</label>
                 <select
                   name="method"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white"
+                  className="input-base [color-scheme:dark]"
                 >
                   <option value="">— optional —</option>
                   <option value="ZELLE">Zelle</option>
@@ -138,21 +138,21 @@ function StudentRow({ student }: { student: Student }) {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Date paid</label>
+                <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Date paid</label>
                 <input
                   name="paidDate"
                   type="date"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white [color-scheme:light]"
+                  className="input-base [color-scheme:dark]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Notes</label>
+                <label className="block text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-1">Notes</label>
                 <input
                   name="notes"
                   type="text"
                   placeholder="Optional..."
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white"
+                  className="input-base"
                 />
               </div>
             </div>
@@ -197,43 +197,41 @@ export function PaymentsView({ students }: Props) {
     return list
   }, [students, search, levelFilter, statusFilter, sort])
 
-  const inputClass = 'border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-orange bg-white'
-
   return (
     <div className="space-y-4">
       {/* Stats */}
-      <p className="text-sm text-gray-500">
-        <span className="text-green-600 font-medium">{paid} paid</span>
+      <p className="text-sm text-white/50">
+        <span className="text-emerald-300 font-medium">{paid} paid</span>
         {' · '}
-        <span className="text-brand-red font-medium">{overdue} overdue</span>
+        <span className="text-red-300 font-medium">{overdue} overdue</span>
         {' · '}
-        <span className="font-medium">{students.length} total</span>
+        <span className="font-medium text-white/70">{students.length} total</span>
       </p>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
+      <div className="glass p-4 space-y-3">
         <input
           type="text"
           placeholder="Search by name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className={`w-full ${inputClass}`}
+          className="input-base w-full"
         />
 
         <div className="flex flex-wrap gap-2">
-          <select value={levelFilter} onChange={(e) => setLevel(e.target.value)} className={inputClass}>
+          <select value={levelFilter} onChange={(e) => setLevel(e.target.value)} className="input-base [color-scheme:dark] w-auto">
             <option value="">All Levels</option>
             {LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
           </select>
 
-          <select value={statusFilter} onChange={(e) => setStatus(e.target.value)} className={inputClass}>
+          <select value={statusFilter} onChange={(e) => setStatus(e.target.value)} className="input-base [color-scheme:dark] w-auto">
             <option value="">All Statuses</option>
             <option value="PAID">Paid</option>
             <option value="PENDING">Pending</option>
             <option value="OVERDUE">Overdue</option>
           </select>
 
-          <select value={sort} onChange={(e) => setSort(e.target.value as typeof sort)} className={inputClass}>
+          <select value={sort} onChange={(e) => setSort(e.target.value as typeof sort)} className="input-base [color-scheme:dark] w-auto">
             <option value="newest">Newest first</option>
             <option value="oldest">Oldest first</option>
             <option value="az">Name A–Z</option>
@@ -243,21 +241,21 @@ export function PaymentsView({ students }: Props) {
 
       {/* Student list */}
       {filtered.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center">
-          <p className="text-gray-400 text-sm">No students match your filters.</p>
+        <div className="glass p-8 text-center">
+          <p className="text-white/40 text-sm">No students match your filters.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="glass overflow-hidden">
           {/* Column headers (desktop) */}
-          <div className="hidden sm:grid grid-cols-[1fr_6rem_7rem_5rem_auto] gap-3 px-4 py-2 border-b border-gray-50">
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Student</span>
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Level</span>
-            <span className="hidden md:block text-xs font-semibold text-gray-400 uppercase tracking-wide">Joined</span>
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Latest</span>
+          <div className="hidden sm:grid grid-cols-[1fr_6rem_7rem_5rem_auto] gap-3 px-4 py-2 border-b border-white/[0.05]">
+            <span className="eyebrow">Student</span>
+            <span className="eyebrow">Level</span>
+            <span className="hidden md:block eyebrow">Joined</span>
+            <span className="eyebrow">Latest</span>
             <span />
           </div>
 
-          <ul className="divide-y divide-gray-50">
+          <ul className="divide-y divide-white/[0.05]">
             {filtered.map((s) => (
               <StudentRow key={s.id} student={s} />
             ))}

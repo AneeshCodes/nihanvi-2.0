@@ -49,8 +49,8 @@ export function EventCalendar({ events }: { events: CalEvent[] }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-      <h2 className="font-semibold text-gray-800 mb-4">Event Calendar</h2>
+    <div className="glass p-5">
+      <h2 className="font-semibold text-white/90 mb-4">Event Calendar</h2>
 
       {/* Month nav */}
       <div className="flex items-center justify-between mb-3">
@@ -58,16 +58,16 @@ export function EventCalendar({ events }: { events: CalEvent[] }) {
           type="button"
           onClick={prev}
           aria-label="Previous month"
-          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors text-gray-500 text-lg"
+          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/[0.06] transition-colors text-white/50 text-lg"
         >
           ‹
         </button>
-        <span className="font-semibold text-gray-800 text-sm">{monthLabel}</span>
+        <span className="font-semibold text-white/90 text-sm">{monthLabel}</span>
         <button
           type="button"
           onClick={next}
           aria-label="Next month"
-          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors text-gray-500 text-lg"
+          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/[0.06] transition-colors text-white/50 text-lg"
         >
           ›
         </button>
@@ -76,7 +76,7 @@ export function EventCalendar({ events }: { events: CalEvent[] }) {
       {/* Day headers */}
       <div className="grid grid-cols-7 mb-1">
         {DAY_LABELS.map((d) => (
-          <div key={d} className="text-center text-xs font-semibold text-gray-400 py-1">
+          <div key={d} className="text-center text-xs font-semibold text-white/40 py-1">
             {d}
           </div>
         ))}
@@ -88,7 +88,7 @@ export function EventCalendar({ events }: { events: CalEvent[] }) {
           <div
             key={i}
             className={`min-h-[44px] flex flex-col items-center justify-start pt-1 ${
-              day === null ? 'bg-gray-50/70' : ''
+              day === null ? 'bg-white/[0.02]' : ''
             }`}
           >
             {day !== null && (
@@ -96,16 +96,16 @@ export function EventCalendar({ events }: { events: CalEvent[] }) {
                 <span
                   className={`text-sm w-8 h-8 flex items-center justify-center rounded-full font-medium transition-colors ${
                     isToday(day)
-                      ? 'bg-brand-orange text-white font-bold'
+                      ? 'bg-brand-orange text-white font-bold ring-2 ring-brand-orange/40'
                       : eventDays.has(day)
-                      ? 'text-brand-orange font-semibold'
-                      : 'text-gray-600 hover:bg-gray-100'
+                      ? 'text-brand-orange font-semibold hover:bg-white/[0.06]'
+                      : 'text-white/70 hover:bg-white/[0.06]'
                   }`}
                 >
                   {day}
                 </span>
                 {eventDays.has(day) && !isToday(day) && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-orange mt-0.5" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-orange mt-0.5 shadow-[0_0_6px_rgba(232,130,12,0.6)]" />
                 )}
               </>
             )}

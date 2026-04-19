@@ -11,9 +11,9 @@ const options: { value: Response; label: string }[] = [
 ]
 
 const activeStyles: Record<Response, string> = {
-  YES:   'bg-green-500 text-white border-green-500',
-  MAYBE: 'bg-yellow-400 text-white border-yellow-400',
-  NO:    'bg-gray-400 text-white border-gray-400',
+  YES:   'bg-emerald-500/15 border-emerald-500/30 text-emerald-300',
+  MAYBE: 'bg-amber-500/15 border-amber-500/30 text-amber-300',
+  NO:    'bg-red-500/15 border-red-500/30 text-red-300',
 }
 
 export function RsvpButtons({ eventId, current }: { eventId: string; current: Response | null }) {
@@ -23,10 +23,10 @@ export function RsvpButtons({ eventId, current }: { eventId: string; current: Re
         <form key={value} action={rsvpAction.bind(null, eventId, value)}>
           <button
             type="submit"
-            className={`min-h-[36px] px-3 py-1 rounded-lg text-xs font-medium border transition-colors
+            className={`min-h-[36px] px-3 py-1 rounded-lg text-xs font-medium border transition-colors backdrop-blur-xl
               ${current === value
                 ? activeStyles[value]
-                : 'border-gray-200 text-gray-600 hover:border-brand-orange hover:text-brand-orange bg-white'
+                : 'bg-white/[0.04] border-white/[0.08] text-white/60 hover:border-brand-orange/40 hover:text-brand-orange hover:bg-brand-orange/10'
               }`}
           >
             {label}
